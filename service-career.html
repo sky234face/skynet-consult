@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Counselling | SkyNet Consult</title>
+    <link rel="icon" type="image/png" href="images/Skynet.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .career-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+        .career-feature {
+            background: #fff;
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid #f1f5f9;
+        }
+        .career-feature h4 { color: var(--accent-blue); margin-bottom: 10px; }
+
+        /* Mobile Menu Styles */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+            z-index: 1001;
+        }
+
+        .bar {
+            width: 25px;
+            height: 3px;
+            background-color: var(--primary-navy);
+            transition: 0.3s;
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle { display: flex; }
+            .nav-links {
+                position: fixed;
+                right: -100%;
+                top: 0;
+                height: 100vh;
+                width: 75%;
+                background: white;
+                flex-direction: column;
+                padding-top: 100px;
+                transition: 0.4s ease-in-out;
+                box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+                z-index: 999;
+            }
+            .nav-links.active { right: 0; }
+            .nav-links li { margin: 20px 0; width: 100%; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="logo-wrapper">
+            <img src="images/Skynet.png" alt="Logo" class="nav-logo">
+            <h2>SkyNet<span>Consult</span></h2>
+        </a>
+
+        <div class="menu-toggle" id="mobile-menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="services.html" class="active">Services</a></li>
+            <li><a href="contact.html" class="btn btn-blue" style="color:white">Get Started</a></li>
+        </ul>
+    </nav>
+
+    <header class="hero-split" style="padding-top:160px;">
+        <div class="hero-container">
+            <div class="hero-content-left">
+                <p class="tagline">Future Mapping</p>
+                <h1>Unlock Your <br><span class="highlight-blue">Professional Path</span></h1>
+                <p class="hero-description">Choosing a career is one of life's biggest decisions. We use aptitude assessments and market data to help you choose a path you'll love.</p>
+                <a href="https://wa.me/233209893750?text=I%20want%20to%20book%20a%20Career%20Counselling%20session" class="btn btn-navy">Book a Session</a>
+            </div>
+            <div class="hero-image-right">
+                <div class="image-wrapper">
+                    <div class="image-bg-shape"></div>
+                    <img src="images/Career Planning.png" class="hero-image" alt="Career Planning">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section>
+        <h2 class="section-title">How We <span class="highlight-blue">Guide You</span></h2>
+        <div class="career-grid">
+            <div class="career-feature">
+                <h4>Aptitude Testing</h4>
+                <p>We identify your natural strengths and interests to narrow down the most suitable industries.</p>
+            </div>
+            <div class="career-feature">
+                <h4>Market Analysis</h4>
+                <p>Learn which careers are in high demand and offer the best long-term financial stability.</p>
+            </div>
+            <div class="career-feature">
+                <h4>Course Alignment</h4>
+                <p>We help you choose the exact university courses required to enter your chosen profession.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>© 2026 SkyNet Consult. All Rights Reserved.</footer>
+
+    <script>
+        const menu = document.querySelector('#mobile-menu');
+        const menuLinks = document.querySelector('.nav-links');
+        const bars = document.querySelectorAll('.bar');
+
+        menu.addEventListener('click', function() {
+            menuLinks.classList.toggle('active');
+            
+            // Animate hamburger to X
+            if(menuLinks.classList.contains('active')) {
+                bars[0].style.transform = "rotate(45deg) translate(5px, 6px)";
+                bars[1].style.opacity = "0";
+                bars[2].style.transform = "rotate(-45deg) translate(5px, -6px)";
+            } else {
+                bars[0].style.transform = "none";
+                bars[1].style.opacity = "1";
+                bars[2].style.transform = "none";
+            }
+        });
+
+        // Close menu if a link is clicked
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                menuLinks.classList.remove('active');
+                bars[0].style.transform = "none";
+                bars[1].style.opacity = "1";
+                bars[2].style.transform = "none";
+            });
+        });
+    </script>
+</body>
+</html>

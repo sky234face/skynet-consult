@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About the Lead | SkyNet Consult</title>
+    <link rel="icon" type="image/png" href="images/Skynet.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Lead Consultant Spotlight Styles */
+        .lead-profile-section {
+            background: #fdfdfd;
+            padding: 80px 8%;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        .lead-card {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 60px;
+            align-items: center;
+            background: white;
+            padding: 50px;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(15, 23, 42, 0.05);
+        }
+
+        .lead-image-container {
+            position: relative;
+        }
+
+        .lead-image {
+            width: 100%;
+            border-radius: 18px;
+            z-index: 2;
+            position: relative;
+        }
+
+        .lead-name {
+            font-size: 32px;
+            color: var(--primary-navy);
+            margin-bottom: 5px;
+        }
+
+        .lead-title {
+            color: var(--accent-blue);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .lead-bio {
+            color: var(--text-gray);
+            font-size: 17px;
+            line-height: 1.8;
+            margin-bottom: 25px;
+        }
+
+        .lead-credentials {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            background: var(--bg-light);
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary-navy);
+            border: 1px solid #e2e8f0;
+        }
+
+        @media (max-width: 992px) {
+            .lead-card { grid-template-columns: 1fr; padding: 30px; text-align: center; }
+            .lead-credentials { justify-content: center; }
+        }
+
+        /* Mobile Menu Styles for this page */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+
+        .bar {
+            width: 25px;
+            height: 3px;
+            background-color: var(--primary-navy);
+            transition: 0.3s;
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle { display: flex; }
+            .nav-links {
+                position: fixed;
+                right: -100%;
+                top: 0;
+                height: 100vh;
+                width: 70%;
+                background: white;
+                flex-direction: column;
+                padding-top: 100px;
+                transition: 0.4s;
+                box-shadow: -10px 0 20px rgba(0,0,0,0.05);
+                z-index: 999;
+            }
+            .nav-links.active { right: 0; }
+            .nav-links li { margin: 15px 0; width: 100%; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="logo-wrapper">
+            <img src="images/Skynet.png" alt="Logo" class="nav-logo">
+            <h2>SkyNet<span>Consult</span></h2>
+        </a>
+
+        <div class="menu-toggle" id="mobile-menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html" class="active">About</a></li>
+            <li><a href="services.html">Services</a></li>
+            <li><a href="contact.html" class="btn btn-blue" style="color:white">Get Started</a></li>
+        </ul>
+    </nav>
+
+    <header class="hero-split">
+        <div class="hero-container">
+            <div class="hero-content-left">
+                <p class="tagline">Our Core Mission</p>
+                <h1>We Bridge the Gap to <span class="highlight-blue">  Academic Excellence</span></h1>
+                <p class="hero-description">
+                    SkyNet Consult is a forward-thinking educational consultancy committed to transforming academic aspirations into reality. Through expert 
+                    ,  <strong>test preparation</strong> to <strong>structured admissions support,</strong> and <strong>career planning</strong>, 
+                    we equip students with the clarity and strategy needed for long-term success..
+                </p>
+            </div>
+            <div class="hero-image-right">
+                <div class="image-wrapper">
+                    <div class="image-bg-shape"></div>
+                    <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4" class="hero-image" alt="Collaboration">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="lead-profile-section">
+        <h2 class="section-title">Leadership <span class="highlight-blue">Excellence</span></h2>
+        <div class="lead-card">
+            <div class="lead-image-container">
+                <div class="image-bg-shape" style="background: #e0f2fe; width: 100%; height: 100%; top: 15px; left: -15px;"></div>
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80" alt="Lead Consultant" class="lead-image">
+            </div>
+            <div class="lead-info">
+                <span class="lead-title">Lead Consultant & Founder</span>
+                <h3 class="lead-name">Ayeere Godfred</h3>
+                <p class="lead-bio">
+                    With over 5 years of experience in international education and placement strategy, Alexander has successfully mentored hundreds of students into Ivy League and top-tier global universities. 
+                    He founded SkyNet Consult to bring transparency and high-level strategy to the Ghanaian educational landscape, ensuring that no ambitious mind is held back by complex borders.
+                </p>
+                <div class="lead-credentials">
+                    <span class="badge">M.Ed Educational Leadership</span>
+                    <span class="badge">Certified Admissions Strategist</span>
+                    <span class="badge">Global Education Fellow</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>© 2026 SkyNet Consult. All Rights Reserved.</footer>
+
+    <script>
+        const menu = document.querySelector('#mobile-menu');
+        const menuLinks = document.querySelector('.nav-links');
+
+        menu.addEventListener('click', function() {
+            menu.classList.toggle('is-active'); // For styling the X if you choose
+            menuLinks.classList.toggle('active');
+            
+            // Optional: Animate hamburger to X
+            const bars = document.querySelectorAll('.bar');
+            if(menuLinks.classList.contains('active')) {
+                bars[0].style.transform = "rotate(45deg) translate(5px, 6px)";
+                bars[1].style.opacity = "0";
+                bars[2].style.transform = "rotate(-45deg) translate(5px, -6px)";
+            } else {
+                bars[0].style.transform = "none";
+                bars[1].style.opacity = "1";
+                bars[2].style.transform = "none";
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | SkyNet Consult</title>
+    <link rel="icon" type="image/png" href="images/Skynet.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Mobile Menu Styles for this page */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+            z-index: 1001;
+        }
+
+        .bar {
+            width: 25px;
+            height: 3px;
+            background-color: var(--primary-navy);
+            transition: 0.3s;
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle { display: flex; }
+            .nav-links {
+                position: fixed;
+                right: -100%;
+                top: 0;
+                height: 100vh;
+                width: 75%;
+                background: white;
+                flex-direction: column;
+                padding-top: 100px;
+                transition: 0.4s ease-in-out;
+                box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+                z-index: 999;
+            }
+            .nav-links.active { right: 0; }
+            .nav-links li { 
+                margin: 20px 0; 
+                width: 100%; 
+                text-align: center; 
+            }
+            /* Adjust hero for mobile */
+            .hero-container { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="logo-wrapper">
+            <img src="images/Skynet.png" alt="Logo" class="nav-logo">
+            <h2>SkyNet<span>Consult</span></h2>
+        </a>
+
+        <div class="menu-toggle" id="mobile-menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="services.html">Services</a></li>
+            <li><a href="contact.html" class="active">Contact</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero-split" style="padding-top:180px">
+        <div class="hero-container">
+            <div class="hero-content-left">
+                <h1>Ready to <br><span class="highlight-blue">Join Us?</span></h1>
+                <p class="hero-description">Fill out the form and our expert consultants will get back to you within 24 hours.</p>
+                <div style="margin-top: 30px;">
+                    <p><strong>Email:</strong> skynet1consult@gmail.com </p>
+                    <p><strong>WhatsApp:</strong> +233 209 893 750</p>
+                </div>
+            </div>
+            <div class="contact-form">
+                <form action="/contact" method="POST">
+                    <input type="text" name="name" placeholder="Full Name" required>
+                    <input type="email" name="email" placeholder="Email Address" required>
+                    <textarea name="message" rows="5" placeholder="How can we help you?" required></textarea>
+                    <button type="submit" class="btn btn-navy" style="width:100%">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer>© 2026 SkyNet Consult. All Rights Reserved.</footer>
+
+    <script>
+        const menu = document.querySelector('#mobile-menu');
+        const menuLinks = document.querySelector('.nav-links');
+        const bars = document.querySelectorAll('.bar');
+
+        menu.addEventListener('click', function() {
+            menuLinks.classList.toggle('active');
+            
+            // Animate hamburger to X
+            if(menuLinks.classList.contains('active')) {
+                bars[0].style.transform = "rotate(45deg) translate(5px, 6px)";
+                bars[1].style.opacity = "0";
+                bars[2].style.transform = "rotate(-45deg) translate(5px, -6px)";
+            } else {
+                bars[0].style.transform = "none";
+                bars[1].style.opacity = "1";
+                bars[2].style.transform = "none";
+            }
+        });
+
+        // Close menu if a link is clicked
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                menuLinks.classList.remove('active');
+                bars[0].style.transform = "none";
+                bars[1].style.opacity = "1";
+                bars[2].style.transform = "none";
+            });
+        });
+    </script>
+</body>
+</html>

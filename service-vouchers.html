@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buy E-Vouchers | SkyNet Consult</title>
+    <link rel="icon" type="image/png" href="images/Skynet.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        .voucher-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .voucher-card {
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .voucher-card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(15, 23, 42, 0.08);
+        }
+
+        .voucher-price {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--primary-navy);
+            margin: 15px 0;
+        }
+
+        .voucher-price span {
+            font-size: 16px;
+            color: var(--text-gray);
+            font-weight: 400;
+        }
+
+        .instant-badge {
+            display: inline-block;
+            background: #dcf2fa;
+            color: var(--accent-blue);
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            align-self: center;
+        }
+
+        /* The Button Style */
+        .buy-now-btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: #25d366; /* WhatsApp Green */
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 700;
+            margin-top: auto;
+            transition: 0.3s;
+        }
+
+        .buy-now-btn:hover {
+            background: #128c7e;
+            transform: scale(1.02);
+        }
+
+        .uni-selection-btn {
+            background: var(--primary-navy);
+        }
+
+        .uni-selection-btn:hover {
+            background: var(--accent-blue);
+        }
+
+        .trust-banner {
+            background: var(--bg-light);
+            padding: 60px 8%;
+            text-align: center;
+            border-radius: 30px;
+            margin: 40px 0 80px;
+        }
+
+        /* Mobile Menu Styles */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+            z-index: 1001;
+        }
+
+        .bar {
+            width: 25px;
+            height: 3px;
+            background-color: var(--primary-navy);
+            transition: 0.3s;
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle { display: flex; }
+            .nav-links {
+                position: fixed;
+                right: -100%;
+                top: 0;
+                height: 100vh;
+                width: 75%;
+                background: white;
+                flex-direction: column;
+                padding-top: 100px;
+                transition: 0.4s ease-in-out;
+                box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+                z-index: 999;
+            }
+            .nav-links.active { right: 0; }
+            .nav-links li { margin: 20px 0; width: 100%; text-align: center; }
+            
+            .voucher-grid { grid-template-columns: 1fr; }
+            .hero-split { padding-top: 120px !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="logo-wrapper">
+            <img src="images/Skynet.png" alt="Logo" class="nav-logo">
+            <h2>SkyNet<span>Consult</span></h2>
+        </a>
+        
+        <div class="menu-toggle" id="mobile-menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="services.html" class="active">Services</a></li>
+            <li><a href="contact.html" class="btn btn-blue" style="color:white">Get Started</a></li>
+        </ul>
+    </nav>
+
+    <header class="hero-split" style="padding-top:160px; padding-bottom: 60px;">
+        <div class="hero-container">
+            <div class="hero-content-left">
+                <p class="tagline">24/7 Digital Delivery</p>
+                <h1>Instant <span class="highlight-blue">E-Voucher</span> Portal</h1>
+                <p class="hero-description">The fastest way to get your academic pins. Select a voucher below and receive your serial and pin via WhatsApp within minutes.</p>
+            </div>
+            <div class="hero-image-right">
+                <div class="image-wrapper">
+                    <div class="image-bg-shape"></div>
+                    <img src="images/E-Voucher Services.png" class="hero-image" alt="E-Voucher Services">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section>
+        <h2 class="section-title">Select Your <span class="highlight-blue">Voucher</span></h2>
+        
+        <div class="voucher-grid">
+            <div class="voucher-card">
+                <span class="instant-badge">Step 1 of 2</span>
+                <h3>University Forms</h3>
+                <p class="voucher-price"><span>Starting</span> GHC 220</p>
+                <p style="font-size: 14px; color: var(--text-gray); margin-bottom: 20px;">Legon, KNUST, UCC, UPSA, and more.</p>
+                <a href="university-selection.html" class="buy-now-btn uni-selection-btn">Choose University</a>
+            </div>
+
+            <div class="voucher-card">
+                <span class="instant-badge">Instant</span>
+                <h3>WASSCE Checker</h3>
+                <p class="voucher-price"><span>GHC</span> 25</p>
+                <p style="font-size: 14px; color: var(--text-gray); margin-bottom: 20px;">WAEC Results & School Placement Pins.</p>
+                <a href="https://wa.me/233209893750?text=Hello%2C%20I%20want%20to%20buy%20a%20WASSCE%20Results%20Checker" class="buy-now-btn">Buy via WhatsApp</a>
+            </div>
+
+            <div class="voucher-card">
+                <span class="instant-badge">Instant</span>
+                <h3>NOV/DEC Voucher</h3>
+                <p class="voucher-price"><span>GHC</span> 30</p>
+                <p style="font-size: 14px; color: var(--text-gray); margin-bottom: 20px;">Private Candidate Registration & Result Pins.</p>
+                <a href="https://wa.me/233209893750?text=Hello%2C%20I%20want%20to%20buy%20a%20NOV/DEC%20Voucher" class="buy-now-btn">Buy via WhatsApp</a>
+            </div>
+
+            <div class="voucher-card">
+                <span class="instant-badge">Instant</span>
+                <h3>BECE Checker</h3>
+                <p class="voucher-price"><span>GHC</span> 20</p>
+                <p style="font-size: 14px; color: var(--text-gray); margin-bottom: 20px;">Junior High School Results & Placement Pins.</p>
+                <a href="https://wa.me/233209893750?text=Hello%2C%20I%20want%20to%20buy%20a%20BECE%20Results%20Checker" class="buy-now-btn">Buy via WhatsApp</a>
+            </div>
+
+            <div class="voucher-card">
+                <span class="instant-badge">Available</span>
+                <h3>Training Colleges</h3>
+                <p class="voucher-price"><span>GHC</span> 200</p>
+                <p style="font-size: 14px; color: var(--text-gray); margin-bottom: 20px;">Nursing and Teacher Training Admission Forms.</p>
+                <a href="https://wa.me/233209893750?text=Hello%2C%20I%20want%20to%20buy%20a%20Training%20College%20Voucher" class="buy-now-btn">Buy via WhatsApp</a>
+            </div>
+        </div>
+    </section>
+
+    <div class="trust-banner">
+        <h3>How to Purchase</h3>
+        <p class="subtitle">Quick delivery via Mobile Money</p>
+        
+        <div style="display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-top: 30px;">
+            <div style="max-width: 200px;">
+                <p style="font-weight:800; color:var(--accent-blue); font-size: 20px;">01</p>
+                <p>Click the <strong>WhatsApp</strong> button for the voucher you need.</p>
+            </div>
+            <div style="max-width: 200px;">
+                <p style="font-weight:800; color:var(--accent-blue); font-size: 20px;">02</p>
+                <p>Receive <strong>MoMo Payment</strong> instructions from our agent.</p>
+            </div>
+            <div style="max-width: 200px;">
+                <p style="font-weight:800; color:var(--accent-blue); font-size: 20px;">03</p>
+                <p>Get your <strong>Serial & Pin</strong> instantly once payment is confirmed.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 SkyNet Consult. All Rights Reserved. | Reliable Digital Services.</p>
+    </footer>
+
+    <script>
+        const menu = document.querySelector('#mobile-menu');
+        const menuLinks = document.querySelector('.nav-links');
+        const bars = document.querySelectorAll('.bar');
+
+        menu.addEventListener('click', function() {
+            menuLinks.classList.toggle('active');
+            if(menuLinks.classList.contains('active')) {
+                bars[0].style.transform = "rotate(45deg) translate(5px, 6px)";
+                bars[1].style.opacity = "0";
+                bars[2].style.transform = "rotate(-45deg) translate(5px, -6px)";
+            } else {
+                bars[0].style.transform = "none";
+                bars[1].style.opacity = "1";
+                bars[2].style.transform = "none";
+            }
+        });
+    </script>
+</body>
+</html>
