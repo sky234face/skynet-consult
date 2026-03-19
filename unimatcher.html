@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UniMatcher | Evolution Coming Soon</title>
+    <title>UniMatcher | Launching April 1st</title>
     <link rel="icon" type="image/png" href="images/Skynet.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
@@ -18,246 +18,242 @@
         body {
             background-color: var(--dark-bg);
             color: white;
-            font-family: 'Inter', sans-serif;
             margin: 0;
+            overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* --- PREVENT CONFLICT WITH GLOBAL.JS --- */
+        .coming-soon-wrapper {
+            min-height: 80vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* --- AMBIENT BACKGROUND --- */
-        .glow {
-            position: absolute;
-            width: 40vw;
-            height: 40vw;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
-            top: -10%;
-            right: -10%;
-            z-index: -1;
-        }
-
-        .glow-2 {
-            position: absolute;
-            width: 50vw;
-            height: 50vw;
-            background: radial-gradient(circle, rgba(245, 158, 11, 0.08) 0%, transparent 70%);
-            bottom: -20%;
-            left: -10%;
-            z-index: -1;
-        }
-
-        /* --- CONTENT WRAPPER --- */
-        .container {
+            padding: 100px 5%;
+            position: relative;
             text-align: center;
-            padding: 20px;
-            max-width: 900px;
-            z-index: 10;
         }
 
-        .product-logo {
-            height: 80px;
-            margin-bottom: 40px;
-            filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.3));
+        /* --- AMBIENT OVERLAY --- */
+        .glow-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(245, 158, 11, 0.08) 0%, transparent 50%);
+            z-index: -1;
         }
 
         .status-badge {
-            background: rgba(59, 130, 246, 0.1);
-            border: 1px solid var(--uni-blue);
-            color: var(--uni-blue);
-            padding: 8px 20px;
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid var(--uni-orange);
+            color: var(--uni-orange);
+            padding: 8px 24px;
             border-radius: 100px;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 25px;
+            letter-spacing: 3px;
+            margin-bottom: 30px;
             display: inline-block;
+            animation: pulse 2s infinite;
         }
 
-        h1 {
-            font-size: clamp(2.5rem, 8vw, 5rem);
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .main-title {
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
             font-weight: 900;
             letter-spacing: -2px;
-            margin: 0 0 20px 0;
-            line-height: 0.9;
+            line-height: 1;
+            margin-bottom: 25px;
         }
 
         .gradient-text {
-            background: linear-gradient(90deg, #fff, #94a3b8);
+            background: linear-gradient(180deg, #fff 30%, #94a3b8 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        p {
+        .sub-text {
             color: #94a3b8;
-            font-size: 18px;
-            line-height: 1.6;
+            font-size: 19px;
             max-width: 600px;
-            margin: 0 auto 40px;
+            margin: 0 auto 50px;
+            line-height: 1.6;
         }
 
-        /* --- PREVIEW STACK --- */
-        .preview-stack {
+        /* --- STACKED PREVIEW --- */
+        .preview-box {
             position: relative;
-            height: 300px;
-            margin-bottom: 60px;
+            width: 100%;
+            max-width: 700px;
+            height: 350px;
+            margin: 0 auto 60px;
         }
 
         .preview-img {
             position: absolute;
-            width: 500px;
-            left: 50%;
-            transform: translateX(-50%);
+            width: 80%;
             border-radius: 20px;
             border: 1px solid var(--glass-border);
-            opacity: 0.3;
-            filter: blur(8px) grayscale(100%);
-            transition: 0.5s ease;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        .preview-img.main {
-            opacity: 0.6;
-            filter: blur(4px);
-            top: 20px;
+        .img-1 { top: 0; z-index: 1; opacity: 0.2; filter: blur(10px); transform: translateX(-60%) scale(0.9); }
+        .img-2 { top: 30px; z-index: 2; opacity: 0.5; filter: blur(4px); }
+        
+        .preview-box:hover .img-1 { transform: translateX(-80%) rotate(-5deg); opacity: 0.4; filter: blur(2px); }
+        .preview-box:hover .img-2 { transform: translateX(-20%) rotate(5deg); opacity: 0.8; filter: blur(0); }
+
+        /* --- COUNTDOWN --- */
+        .countdown-grid {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 60px;
         }
 
-        .preview-img.back {
-            width: 450px;
-            top: 0;
-            z-index: -1;
+        .time-box span {
+            display: block;
+            font-size: 48px;
+            font-weight: 900;
+            color: white;
+            line-height: 1;
         }
 
-        /* --- GLASS FORM --- */
-        .notify-card {
+        .time-box label {
+            font-size: 12px;
+            color: var(--uni-blue);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        /* --- FORM --- */
+        .notify-form {
             background: var(--glass);
             backdrop-filter: blur(20px);
-            padding: 40px;
-            border-radius: 30px;
+            padding: 10px;
+            border-radius: 20px;
             border: 1px solid var(--glass-border);
+            display: flex;
             max-width: 500px;
             margin: 0 auto;
         }
 
-        .input-group {
-            display: flex;
-            gap: 10px;
-            background: rgba(255,255,255,0.05);
-            padding: 8px;
-            border-radius: 15px;
-            border: 1px solid var(--glass-border);
-        }
-
-        input {
+        .notify-form input {
             background: transparent;
             border: none;
             color: white;
-            padding: 12px 20px;
-            flex-grow: 1;
-            font-size: 16px;
+            padding: 15px 25px;
+            flex: 1;
             outline: none;
+            font-size: 16px;
         }
 
-        .btn-notify {
+        .btn-launch {
             background: var(--uni-blue);
             color: white;
             border: none;
-            padding: 12px 25px;
-            border-radius: 10px;
+            padding: 15px 30px;
+            border-radius: 15px;
             font-weight: 700;
             cursor: pointer;
             transition: 0.3s;
         }
 
-        .btn-notify:hover {
-            background: #2563eb;
-            transform: scale(1.05);
-        }
-
-        /* --- COUNTDOWN --- */
-        .timer {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-top: 40px;
-        }
-
-        .timer-unit span {
-            display: block;
-            font-size: 32px;
-            font-weight: 800;
-            color: white;
-        }
-
-        .timer-unit label {
-            font-size: 11px;
-            color: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+        .btn-launch:hover { background: #2563eb; transform: translateY(-2px); }
 
         @media (max-width: 768px) {
-            .preview-img { width: 90%; }
-            .input-group { flex-direction: column; background: transparent; border: none; padding: 0; }
-            input { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 10px; margin-bottom: 10px; }
+            .countdown-grid { gap: 20px; }
+            .time-box span { font-size: 32px; }
+            .notify-form { flex-direction: column; padding: 20px; background: none; border: none; }
+            .notify-form input { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 15px; margin-bottom: 10px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="glow"></div>
-    <div class="glow-2"></div>
+    <main class="coming-soon-wrapper">
+        <div class="glow-bg"></div>
 
-    <div class="container">
-        <img src="images/unimatcher-logo.png" alt="UniMatcher" class="product-logo">
+        <div class="status-badge">Launching April 1st</div>
         
-        <div class="status-badge">Next-Gen Release</div>
-        
-        <h1><span class="gradient-text">Matching You To</span><br>
-            <span style="color: var(--uni-orange);">Higher Education.</span>
+        <h1 class="main-title">
+            <span class="gradient-text">The Future of</span><br>
+            <span style="color: var(--uni-blue);">Academic Matching.</span>
         </h1>
-        
-        <p>We're rebuilding the algorithm to be faster, smarter, and more precise. Get notified the second we launch the 2026 upgrade.</p>
 
-        <div class="preview-stack">
-            <img src="images/dash.png" class="preview-img back" alt="Teaser">
-            <img src="images/UI UniMatcher.jpg" class="preview-img main" alt="Teaser">
-        </div>
+        <p class="sub-text">
+            We're upgrading UniMatcher with the 2026 university requirements. 
+            Get ready for the most accurate placement tool in Ghana.
+        </p>
 
-        <div class="notify-card">
-            <h3 style="margin-top: 0; margin-bottom: 20px; font-size: 18px;">Join the Early Access List</h3>
-            <div class="input-group">
-                <input type="email" placeholder="Enter your email address">
-                <button class="btn-notify">Notify Me</button>
-            </div>
-        </div>
-
-        <div class="timer">
-            <div class="timer-unit">
-                <span id="days">08</span>
+        <div class="countdown-grid">
+            <div class="time-box">
+                <span id="days">00</span>
                 <label>Days</label>
             </div>
-            <div class="timer-unit">
-                <span id="hours">14</span>
+            <div class="time-box">
+                <span id="hours">00</span>
                 <label>Hours</label>
             </div>
-            <div class="timer-unit">
-                <span id="mins">22</span>
+            <div class="time-box">
+                <span id="minutes">00</span>
                 <label>Mins</label>
             </div>
+            <div class="time-box">
+                <span id="seconds">00</span>
+                <label>Secs</label>
+            </div>
         </div>
-    </div>
 
+        <div class="preview-box">
+            <img src="images/dash.png" class="preview-img img-1" alt="Dashboard Preview">
+            <img src="images/UI UniMatcher.png" class="preview-img img-2" alt="UI Preview">
+        </div>
+
+        <div class="notify-form">
+            <input type="email" placeholder="Your email address...">
+            <button class="btn-launch">Get Early Access</button>
+        </div>
+    </main>
+
+    <script src="global.js"></script>
+    
     <script>
-        // Simple Countdown Logic
-        function updateTimer() {
-            const launchDate = new Date();
-            launchDate.setDate(launchDate.getDate() + 8); // Fake 8-day countdown
+        // TARGET DATE: April 1st, 2026
+        const targetDate = new Date("April 1, 2026 00:00:00").getTime();
 
-            // You can replace this with a real countdown logic if you have a launch date!
-        }
+        const timer = setInterval(function() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerHTML = d.toString().padStart(2, '0');
+            document.getElementById("hours").innerHTML = h.toString().padStart(2, '0');
+            document.getElementById("minutes").innerHTML = m.toString().padStart(2, '0');
+            document.getElementById("seconds").innerHTML = s.toString().padStart(2, '0');
+
+            if (distance < 0) {
+                clearInterval(timer);
+                document.querySelector(".countdown-grid").innerHTML = "<h3>WE ARE LIVE!</h3>";
+            }
+        }, 1000);
     </script>
 </body>
 </html>
