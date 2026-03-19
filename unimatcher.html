@@ -7,182 +7,194 @@
     <link rel="icon" type="image/png" href="images/Skynet.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --dark-bg: #020617;
-            --uni-blue: #3b82f6;
-            --uni-orange: #f59e0b;
-            --glass: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.1);
-        }
+    :root {
+        --dark-bg: #020617;
+        --uni-blue: #3b82f6;
+        --uni-orange: #f59e0b;
+        --glass: rgba(255, 255, 255, 0.03);
+        --glass-border: rgba(255, 255, 255, 0.1);
+    }
 
-        /* --- CRITICAL SIDEBAR FIX --- */
-        /* This prevents the global.js sidebar from showing on load */
-        aside, .sidebar, #sidebar { 
-            display: none !important; 
-        }
-        /* Only show it if it has an active class (adjust class name to match your global.js) */
-        aside.active, .sidebar.active, #sidebar.active { 
-            display: block !important; 
-        }
+    /* --- SIDEBAR NEUTRALIZER --- */
+    /* This stops global.js from pushing your content */
+    aside, .sidebar, #sidebar, [class*="sidebar"] {
+        display: none !important;
+        width: 0 !important;
+        position: absolute !important;
+        visibility: hidden !important;
+    }
 
-        body {
-            background-color: var(--dark-bg);
-            color: white;
-            margin: 0;
-            overflow-x: hidden;
-            font-family: 'Inter', sans-serif;
-        }
+    /* Force the main container to be full width */
+    body, html {
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow-x: hidden !important;
+        width: 100% !important;
+    }
 
-        .coming-soon-wrapper {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 100px 5%;
-            position: relative;
-            text-align: center;
-            box-sizing: border-box;
-        }
+    body {
+        background-color: var(--dark-bg);
+        color: white;
+        font-family: 'Inter', sans-serif;
+    }
 
-        .glow-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.15) 0%, transparent 50%);
-            z-index: -1;
-        }
+    /* --- WRAPPER --- */
+    .coming-soon-wrapper {
+        min-height: 100vh;
+        width: 100% !important;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+        position: relative;
+        text-align: center;
+        box-sizing: border-box;
+        margin: 0 !important; /* Overrides global.js margins */
+    }
 
-        .status-badge {
-            background: rgba(245, 158, 11, 0.1);
-            border: 1px solid var(--uni-orange);
-            color: var(--uni-orange);
-            padding: 8px 24px;
-            border-radius: 100px;
-            font-size: 12px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            margin-bottom: 25px;
-            animation: pulse 2s infinite;
-        }
+    .glow-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.15) 0%, transparent 50%);
+        z-index: -1;
+    }
 
-        .main-title {
-            font-size: clamp(2.2rem, 7vw, 4.5rem);
-            font-weight: 900;
-            letter-spacing: -2px;
-            line-height: 1.1;
-            margin: 0 0 20px 0;
-        }
+    .status-badge {
+        background: rgba(245, 158, 11, 0.1);
+        border: 1px solid var(--uni-orange);
+        color: var(--uni-orange);
+        padding: 8px 20px;
+        border-radius: 100px;
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 20px;
+        animation: pulse 2s infinite;
+    }
 
-        .gradient-text {
-            background: linear-gradient(180deg, #fff 30%, #94a3b8 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 
-        .countdown-grid {
-            display: flex;
-            justify-content: center;
-            gap: clamp(15px, 5vw, 40px);
-            margin: 40px 0;
-        }
+    .main-title {
+        font-size: clamp(1.8rem, 8vw, 4rem);
+        font-weight: 900;
+        line-height: 1.1;
+        margin: 0 0 15px 0;
+    }
 
-        .time-box span {
-            display: block;
-            font-size: clamp(32px, 6vw, 54px);
-            font-weight: 900;
-            color: white;
-        }
+    .gradient-text {
+        background: linear-gradient(180deg, #fff 30%, #94a3b8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
 
-        .time-box label {
-            font-size: 10px;
-            color: var(--uni-blue);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+    .sub-text {
+        color: #94a3b8;
+        font-size: clamp(14px, 4vw, 17px);
+        max-width: 500px;
+        margin: 0 auto 30px;
+        line-height: 1.5;
+    }
 
-        /* --- PREVIEW BOX --- */
-        .preview-box {
-            position: relative;
-            width: 100%;
-            max-width: 600px;
-            height: 250px;
-            margin: 20px auto 40px;
-        }
+    .countdown-grid {
+        display: flex;
+        justify-content: center;
+        gap: clamp(10px, 4vw, 30px);
+        margin-bottom: 40px;
+    }
 
-        .preview-img {
-            position: absolute;
-            width: 75%;
-            border-radius: 15px;
-            border: 1px solid var(--glass-border);
-            left: 50%;
-            transform: translateX(-50%);
-            transition: 0.5s ease;
-        }
+    .time-box span {
+        display: block;
+        font-size: clamp(24px, 7vw, 40px);
+        font-weight: 900;
+        color: white;
+    }
 
-        .img-1 { top: 0; opacity: 0.3; filter: blur(8px); transform: translateX(-60%) scale(0.9); }
-        .img-2 { top: 30px; opacity: 0.7; filter: blur(2px); transform: translateX(-40%); }
+    .time-box label {
+        font-size: 9px;
+        color: var(--uni-blue);
+        text-transform: uppercase;
+    }
 
-        /* --- FORM & SUCCESS ANIMATION --- */
+    .preview-box {
+        position: relative;
+        width: 100%;
+        max-width: 500px;
+        height: 200px;
+        margin: 0 auto 40px;
+    }
+
+    .preview-img {
+        position: absolute;
+        width: 70%;
+        border-radius: 12px;
+        border: 1px solid var(--glass-border);
+        left: 50%;
+        transform: translateX(-50%);
+        transition: 0.5s ease;
+    }
+
+    .img-1 { top: 0; opacity: 0.2; filter: blur(5px); transform: translateX(-60%) scale(0.9); }
+    .img-2 { top: 20px; opacity: 0.8; transform: translateX(-40%); }
+
+    .notify-form {
+        background: var(--glass);
+        backdrop-filter: blur(20px);
+        padding: 6px;
+        border-radius: 16px;
+        border: 1px solid var(--glass-border);
+        display: flex;
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    .notify-form input {
+        background: transparent;
+        border: none;
+        color: white;
+        padding: 12px 15px;
+        flex: 1;
+        outline: none;
+        font-size: 15px;
+    }
+
+    .btn-launch {
+        background: var(--uni-blue);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 12px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    @media (max-width: 600px) {
         .notify-form {
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            padding: 8px;
-            border-radius: 20px;
-            border: 1px solid var(--glass-border);
-            display: flex;
-            width: 100%;
-            max-width: 450px;
-            margin: 0 auto;
-            transition: 0.5s;
-        }
-
-        .notify-form input {
+            flex-direction: column;
             background: transparent;
             border: none;
-            color: white;
-            padding: 12px 20px;
-            flex: 1;
-            outline: none;
-            font-size: 16px;
+            gap: 10px;
         }
-
-        .btn-launch {
-            background: var(--uni-blue);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 15px;
-            font-weight: 700;
-            cursor: pointer;
+        .notify-form input {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
         }
-
-        /* Success State */
-        .success-msg {
-            display: none;
-            color: #22c55e;
-            font-weight: 700;
-            margin-top: 20px;
-            animation: fadeIn 0.5s ease forwards;
-        }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        @media (max-width: 600px) {
-            .coming-soon-wrapper { padding: 40px 20px; }
-            .notify-form { flex-direction: column; background: transparent; border: none; }
-            .notify-form input { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 15px; margin-bottom: 10px; }
-            .preview-box { height: 180px; }
-        }
-    </style>
+        .btn-launch { width: 100%; padding: 15px; }
+        .preview-box { height: 160px; }
+    }
+</style>
 </head>
 <body>
 
     <main class="coming-soon-wrapper">
         <div class="glow-bg"></div>
+
         <div class="status-badge">Launching April 1st</div>
         
         <h1 class="main-title">
@@ -190,50 +202,65 @@
             <span style="color: var(--uni-blue);">Academic Matching.</span>
         </h1>
 
+        <p class="sub-text">
+            We're upgrading UniMatcher with the 2026 university requirements. 
+            Get ready for the most accurate placement tool in Ghana.
+        </p>
+
         <div class="countdown-grid">
-            <div class="time-box"><span id="days">00</span><label>Days</label></div>
-            <div class="time-box"><span id="hours">00</span><label>Hours</label></div>
-            <div class="time-box"><span id="minutes">00</span><label>Mins</label></div>
-            <div class="time-box"><span id="seconds">00</span><label>Secs</label></div>
+            <div class="time-box">
+                <span id="days">00</span>
+                <label>Days</label>
+            </div>
+            <div class="time-box">
+                <span id="hours">00</span>
+                <label>Hours</label>
+            </div>
+            <div class="time-box">
+                <span id="minutes">00</span>
+                <label>Mins</label>
+            </div>
+            <div class="time-box">
+                <span id="seconds">00</span>
+                <label>Secs</label>
+            </div>
         </div>
 
         <div class="preview-box">
-            <img src="images/dash.png" class="preview-img img-1" alt="Preview">
-            <img src="images/UI UniMatcher.png" class="preview-img img-2" alt="Preview">
+            <img src="images/dash.png" class="preview-img img-1" alt="Dashboard">
+            <img src="images/UI UniMatcher.png" class="preview-img img-2" alt="Interface">
         </div>
 
-        <div id="form-container">
-            <div class="notify-form">
-                <input type="email" id="user-email" placeholder="Your email address...">
-                <button class="btn-launch" onclick="showSuccess()">Get Early Access</button>
-            </div>
-            <div id="success-text" class="success-msg">✓ You're on the list! See you April 1st.</div>
+        <div class="notify-form">
+            <input type="email" placeholder="Your email address...">
+            <button class="btn-launch">Get Early Access</button>
         </div>
     </main>
 
     <script src="global.js"></script>
+    
     <script>
-        // COUNTDOWN SCRIPT
         const targetDate = new Date("April 1, 2026 00:00:00").getTime();
-        setInterval(function() {
+
+        const timer = setInterval(function() {
             const now = new Date().getTime();
             const distance = targetDate - now;
-            document.getElementById("days").innerText = Math.floor(distance / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
-            document.getElementById("hours").innerText = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
-            document.getElementById("minutes").innerText = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
-            document.getElementById("seconds").innerText = Math.floor((distance % (1000 * 60)) / 1000).toString().padStart(2, '0');
-        }, 1000);
 
-        // SUCCESS ANIMATION
-        function showSuccess() {
-            const email = document.getElementById('user-email').value;
-            if(email.includes('@')) {
-                document.querySelector('.notify-form').style.display = 'none';
-                document.getElementById('success-text').style.display = 'block';
-            } else {
-                alert("Please enter a valid email!");
+            const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = d.toString().padStart(2, '0');
+            document.getElementById("hours").innerText = h.toString().padStart(2, '0');
+            document.getElementById("minutes").innerText = m.toString().padStart(2, '0');
+            document.getElementById("seconds").innerText = s.toString().padStart(2, '0');
+
+            if (distance < 0) {
+                clearInterval(timer);
+                document.querySelector(".countdown-grid").innerHTML = "<h3>WE ARE LIVE!</h3>";
             }
-        }
+        }, 1000);
     </script>
 </body>
 </html>
