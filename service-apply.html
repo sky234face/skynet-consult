@@ -3,214 +3,239 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>University Applications | SkyNet Consult</title>
+    <title>University Admissions | SkyNet Consult</title>
     <link rel="icon" type="image/png" href="images/Skynet.png">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    
     <style>
-        .application-container {
-            display: grid;
-            grid-template-columns: 1.5fr 1fr;
-            gap: 50px;
-            padding: 40px 8% 100px;
+        :root {
+            --primary-navy: #0a192f;
+            --accent-blue: #00d2ff;
+            --text-gray: #64748b;
+            --input-bg: #f8fafc;
         }
 
-        /* Timeline Styles */
-        .timeline {
-            position: relative;
-            padding-left: 30px;
-            border-left: 2px solid #e2e8f0;
-        }
-
-        .timeline-item {
-            position: relative;
-            margin-bottom: 40px;
-        }
-
-        .timeline-item::before {
-            content: "";
-            position: absolute;
-            left: -41px;
-            top: 0;
-            width: 20px;
-            height: 20px;
-            background: var(--accent-blue);
-            border: 4px solid white;
-            border-radius: 50%;
-            box-shadow: 0 0 0 2px var(--accent-blue);
-        }
-
-        /* Checklist Box */
-        .checklist-card {
-            background: #f8fafc;
-            padding: 40px;
-            border-radius: 20px;
-            position: sticky;
-            top: 120px;
-            height: fit-content;
-        }
-
-        .checklist-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
-            font-size: 15px;
+        body { 
+            background: #ffffff; 
             color: var(--primary-navy);
+            overflow-x: hidden;
         }
 
-        .check-icon {
-            color: #25d366;
-            font-weight: 900;
+        .apply-hero {
+            padding: 120px 8% 60px;
+            text-align: center;
+            background: linear-gradient(180deg, #f0f7ff 0%, #ffffff 100%);
         }
 
-        /* Mobile Menu Styles */
-        .menu-toggle {
-            display: none;
-            flex-direction: column;
+        .apply-hero h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 10px;
+        }
+
+        /* --- CLASSIC FORM CONTAINER --- */
+        .apply-container { 
+            max-width: 700px; 
+            margin: 0 auto 100px; 
+            padding: 0 20px; 
+        }
+
+        .application-form {
+            background: #ffffff;
+            padding: 50px;
+            border-radius: 24px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-header {
+            border-bottom: 1px solid #f1f5f9;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+        }
+
+        .form-header h2 { font-size: 1.25rem; font-weight: 700; color: var(--primary-navy); }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .input-group { margin-bottom: 25px; position: relative; }
+        .full-width { grid-column: span 2; }
+
+        .input-group label { 
+            display: block; 
+            font-weight: 600; 
+            margin-bottom: 8px; 
+            color: var(--primary-navy); 
+            font-size: 0.85rem; 
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 15px 20px;
+            border-radius: 12px;
+            border: 1.5px solid #e2e8f0;
+            background: var(--input-bg);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(0, 210, 255, 0.1);
+        }
+
+        /* --- SEARCH DROPDOWN --- */
+        .search-results {
+            position: absolute;
+            top: 100%; left: 0; width: 100%;
+            background: white; border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-height: 250px; overflow-y: auto;
+            display: none; z-index: 100; border: 1px solid #e2e8f0;
+        }
+
+        .search-item {
+            padding: 12px 20px;
             cursor: pointer;
-            gap: 5px;
-            z-index: 1001;
+            font-size: 0.95rem;
+            border-bottom: 1px solid #f8fafc;
         }
+        .search-item:hover { background: #f0f9ff; color: var(--accent-blue); }
 
-        .bar {
-            width: 25px;
-            height: 3px;
-            background-color: var(--primary-navy);
+        .btn-submit {
+            width: 100%;
+            padding: 18px;
+            background: var(--primary-navy);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
             transition: 0.3s;
+            margin-top: 10px;
         }
+        .btn-submit:hover { background: var(--accent-blue); transform: translateY(-2px); }
 
-        @media (max-width: 992px) {
-            .application-container { grid-template-columns: 1fr; }
-            .checklist-card { position: static; }
-        }
-
-        @media (max-width: 768px) {
-            .menu-toggle { display: flex; }
-            .nav-links {
-                position: fixed;
-                right: -100%;
-                top: 0;
-                height: 100vh;
-                width: 75%;
-                background: white;
-                flex-direction: column;
-                padding-top: 100px;
-                transition: 0.4s ease-in-out;
-                box-shadow: -10px 0 30px rgba(0,0,0,0.1);
-                z-index: 999;
-            }
-            .nav-links.active { right: 0; }
-            .nav-links li { margin: 20px 0; width: 100%; text-align: center; }
+        @media (max-width: 600px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .full-width { grid-column: span 1; }
+            .application-form { padding: 30px 20px; }
         }
     </style>
 </head>
 <body>
 
-    <nav>
-        <a href="index.html" class="logo-wrapper">
-            <img src="images/Skynet.png" alt="Logo" class="nav-logo">
-            <h2>SkyNet<span>Consult</span></h2>
-        </a>
-
-        <div class="menu-toggle" id="mobile-menu">
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
-        </div>
-
-        <ul class="nav-links">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="about.html">About</a></li>
-            <li><a href="services.html" class="active">Services</a></li>
-            <li><a href="contact.html" class="btn btn-blue" style="color:white">Get Started</a></li>
-        </ul>
-    </nav>
-
-    <header class="hero-split" style="padding-top:160px; padding-bottom: 40px;">
-        <div class="hero-container">
-            <div class="hero-content-left">
-                <p class="tagline">Success Starts Here</p>
-                <h1>Apply to Your <span class="highlight-blue">Dream University</span></h1>
-                <p class="hero-description">We take the guesswork out of admissions. Whether you are applying locally or internationally, our experts ensure your application is perfect.</p>
-                <a href="https://wa.me/233209893750?text=I%20need%20help%20with%20my%20University%20Application" class="btn btn-navy">Consult an Expert</a>
-            </div>
-            <div class="hero-image-right">
-                <div class="image-wrapper">
-                    <div class="image-bg-shape"></div>
-                    <img src="images/Graduation cap.png" class="hero-image" alt="Graduation Cap">
-                </div>
-            </div>
-        </div>
+    <header class="apply-hero">
+        <h1>Admission <span style="color:var(--accent-blue)">Inquiry</span></h1>
+        <p style="color:var(--text-gray)">Complete the form below to begin your academic journey.</p>
     </header>
 
-    <div class="application-container">
-        <div class="process-flow">
-            <h2 style="margin-bottom: 40px;">The Application <span class="highlight-blue">Process</span></h2>
-            
-            <div class="timeline">
-                <div class="timeline-item">
-                    <h4>1. Profile Evaluation</h4>
-                    <p>We review your grades and interests to suggest the best schools and programs for your career goals.</p>
+    <div class="apply-container">
+        <form class="application-form" id="admissionForm" autocomplete="off">
+            <div class="form-header">
+                <h2>Candidate Information</h2>
+            </div>
+
+            <div class="form-grid">
+                <div class="input-group full-width">
+                    <label>Full Legal Name</label>
+                    <input type="text" id="studentName" placeholder="Enter name as it appears on results" required>
                 </div>
-                <div class="timeline-item">
-                    <h4>2. Document Preparation</h4>
-                    <p>We help you organize your transcripts, result slips, and personal statements to meet institutional standards.</p>
+
+                <div class="input-group">
+                    <label>WhatsApp Number</label>
+                    <input type="tel" id="studentPhone" placeholder="+233..." required>
                 </div>
-                <div class="timeline-item">
-                    <h4>3. Online Submission</h4>
-                    <p>Our team handles the portal entry to ensure no errors are made during the technical submission phase.</p>
+
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <input type="email" id="studentEmail" placeholder="example@mail.com">
                 </div>
-                <div class="timeline-item">
-                    <h4>4. Admission Tracking</h4>
-                    <p>We monitor your application status and handle follow-up communications with the university registry.</p>
+
+                <div class="input-group full-width">
+                    <label>Preferred Institution</label>
+                    <input type="text" id="uniInput" placeholder="Search for university or college..." oninput="handleSearch(this)" required>
+                    <div id="resultsBox" class="search-results"></div>
+                </div>
+
+                <div class="input-group full-width">
+                    <label>Program of Interest</label>
+                    <input type="text" id="programChoice" placeholder="e.g. Bachelor of Science in Nursing" required>
                 </div>
             </div>
-        </div>
 
-        <div class="checklist-card">
-            <h3 style="margin-bottom: 25px;">Required Documents</h3>
-            <div class="checklist-item"><span class="check-icon">✓</span> WASSCE / SSCE Results Slip</div>
-            <div class="checklist-item"><span class="check-icon">✓</span> Birth Certificate / Passport</div>
-            <div class="checklist-item"><span class="check-icon">✓</span> Passport Sized Photographs</div>
-            <div class="checklist-item"><span class="check-icon">✓</span> High School Transcripts</div>
-            <div class="checklist-item"><span class="check-icon">✓</span> Recommendation Letters (if required)</div>
-            
-            <hr style="margin: 25px 0; border: none; border-top: 1px solid #e2e8f0;">
-            
-            <p style="font-size: 14px; color: var(--text-gray); margin-bottom: 20px;">Missing something? We can help you secure copies or request transcripts.</p>
-            <a href="contact.html" class="btn btn-blue" style="width: 100%; text-align: center;">Ask a Question</a>
-        </div>
+            <button type="submit" class="btn-submit">Submit Application Request</button>
+        </form>
     </div>
 
-    <footer>© 2026 SkyNet Consult. All Rights Reserved.</footer>
-
     <script>
-        const menu = document.querySelector('#mobile-menu');
-        const menuLinks = document.querySelector('.nav-links');
-        const bars = document.querySelectorAll('.bar');
+        const institutions = [
+            "University of Ghana (Legon)", "KNUST", "University of Cape Coast (UCC)", 
+            "UDS (Tamale)", "UPSA", "University of Education (UEW)", "GIMPA",
+            "Accra Technical University", "Kumasi Technical University", "Ho Technical University",
+            "Valley View University", "Ashesi University", "Central University", 
+            "Nursing & Midwifery Training College, Korle-Bu", "Nursing Training College, Kumasi"
+        ];
 
-        menu.addEventListener('click', function() {
-            menuLinks.classList.toggle('active');
-            if(menuLinks.classList.contains('active')) {
-                bars[0].style.transform = "rotate(45deg) translate(5px, 6px)";
-                bars[1].style.opacity = "0";
-                bars[2].style.transform = "rotate(-45deg) translate(5px, -6px)";
+        function handleSearch(input) {
+            const resultsBox = document.getElementById('resultsBox');
+            const val = input.value.toLowerCase();
+            if (val.length < 1) { resultsBox.style.display = 'none'; return; }
+
+            const filtered = institutions.filter(item => item.toLowerCase().includes(val));
+
+            if (filtered.length > 0) {
+                resultsBox.innerHTML = filtered.map(item => 
+                    `<div class="search-item" onclick="selectItem('${item}')">${item}</div>`
+                ).join('');
+                resultsBox.style.display = 'block';
             } else {
-                bars[0].style.transform = "none";
-                bars[1].style.opacity = "1";
-                bars[2].style.transform = "none";
+                resultsBox.style.display = 'none';
+            }
+        }
+
+        function selectItem(name) {
+            document.getElementById('uniInput').value = name;
+            document.getElementById('resultsBox').style.display = 'none';
+        }
+
+        // --- SUBMISSION LOGIC (The "Where does it go?" part) ---
+        document.getElementById('admissionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Collect Data
+            const name = document.getElementById('studentName').value;
+            const phone = document.getElementById('studentPhone').value;
+            const school = document.getElementById('uniInput').value;
+            const program = document.getElementById('programChoice').value;
+
+            // Skynet Consult WhatsApp Number
+            const skynetWhatsApp = "233547933440"; // REPLACE THIS with your real business number
+
+            // Construct the Message
+            const message = `Hello Skynet Consult,%0A%0AI would like to apply for admission.%0A%0A*Name:* ${name}%0A*Phone:* ${phone}%0A*Institution:* ${school}%0A*Program:* ${program}`;
+
+            // Redirect to WhatsApp
+            window.open(`https://wa.me/${skynetWhatsApp}?text=${message}`, '_blank');
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!document.getElementById('uniInput').contains(e.target)) {
+                document.getElementById('resultsBox').style.display = 'none';
             }
         });
-
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                menuLinks.classList.remove('active');
-                bars[0].style.transform = "none";
-                bars[1].style.opacity = "1";
-                bars[2].style.transform = "none";
-            });
-        });
     </script>
+    <script src="global.js"></script>
 </body>
 </html>

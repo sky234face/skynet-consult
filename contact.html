@@ -5,124 +5,234 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us | SkyNet Consult</title>
     <link rel="icon" type="image/png" href="images/Skynet.png">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Mobile Menu Styles for this page */
-        .menu-toggle {
-            display: none;
-            flex-direction: column;
-            cursor: pointer;
-            gap: 5px;
-            z-index: 1001;
+        :root {
+            --primary-navy: #0f172a;
+            --accent-blue: #3b82f6;
+            --glass: rgba(255, 255, 255, 0.9);
+            --border: rgba(226, 232, 240, 0.8);
         }
 
-        .bar {
-            width: 25px;
-            height: 3px;
-            background-color: var(--primary-navy);
+        body {
+            background: radial-gradient(circle at top right, #f8fafc, #ffffff);
+            color: var(--primary-navy);
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* --- NAVIGATION REFINEMENT --- */
+        nav {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* --- HERO SECTION --- */
+        .contact-hero {
+            padding: 160px 8% 80px;
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 60px;
+            align-items: flex-start;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .hero-left h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 25px;
+            letter-spacing: -1px;
+        }
+
+        .hero-description {
+            font-size: 18px;
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 40px;
+        }
+
+        /* --- INTERACTIVE CONTACT CARDS --- */
+        .contact-method {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 25px;
+            background: white;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .contact-method:hover {
+            transform: translateX(10px);
+            border-color: var(--accent-blue);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.1);
+        }
+
+        .icon-box {
+            width: 55px;
+            height: 55px;
+            background: #eff6ff;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: var(--accent-blue);
+        }
+
+        /* --- GLASS FORM --- */
+        .contact-form-card {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            padding: 50px;
+            border-radius: 35px;
+            border: 1px solid var(--border);
+            box-shadow: 0 40px 100px rgba(15, 23, 42, 0.08);
+            position: relative;
+        }
+
+        .form-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 18px 25px;
+            border-radius: 15px;
+            border: 1px solid #e2e8f0;
+            background: #f8fafc;
+            font-size: 16px;
+            font-family: inherit;
             transition: 0.3s;
         }
 
-        @media (max-width: 768px) {
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        .btn-premium {
+            background: var(--primary-navy);
+            color: white;
+            padding: 20px;
+            border: none;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-premium:hover {
+            background: #1e293b;
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.2);
+        }
+
+        /* --- MOBILE MENU --- */
+        .menu-toggle { display: none; flex-direction: column; cursor: pointer; gap: 5px; z-index: 1001; }
+        .bar { width: 25px; height: 3px; background-color: var(--primary-navy); transition: 0.3s; }
+
+        @media (max-width: 992px) {
+            .contact-hero { grid-template-columns: 1fr; padding-top: 120px; }
+            .input-row { grid-template-columns: 1fr; }
             .menu-toggle { display: flex; }
             .nav-links {
-                position: fixed;
-                right: -100%;
-                top: 0;
-                height: 100vh;
-                width: 75%;
-                background: white;
-                flex-direction: column;
-                padding-top: 100px;
-                transition: 0.4s ease-in-out;
-                box-shadow: -10px 0 30px rgba(0,0,0,0.1);
-                z-index: 999;
+                position: fixed; right: -100%; top: 0; height: 100vh; width: 75%;
+                background: white; flex-direction: column; padding-top: 100px;
+                transition: 0.4s; z-index: 999;
             }
             .nav-links.active { right: 0; }
-            .nav-links li { 
-                margin: 20px 0; 
-                width: 100%; 
-                text-align: center; 
-            }
-            /* Adjust hero for mobile */
-            .hero-container { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <nav>
-        <a href="index.html" class="logo-wrapper">
-            <img src="images/Skynet.png" alt="Logo" class="nav-logo">
-            <h2>SkyNet<span>Consult</span></h2>
-        </a>
+    <main class="contact-hero">
+        <div class="hero-left">
+            <h1>Let’s build your <br><span style="color: var(--accent-blue);">future together.</span></h1>
+            <p class="hero-description">Have a question about UniMatcher or need expert career guidance? Our team is ready to assist you.</p>
+            
+            <a href="https://wa.me/233209893750" class="contact-method">
+                <div class="icon-box">💬</div>
+                <div>
+                    <span style="display: block; font-weight: 700; font-size: 18px;">Chat on WhatsApp</span>
+                    <span style="color: #64748b; font-size: 14px;">Instant response during work hours</span>
+                </div>
+            </a>
 
-        <div class="menu-toggle" id="mobile-menu">
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
+            <a href="mailto:skynet1consult@gmail.com" class="contact-method">
+                <div class="icon-box">✉️</div>
+                <div>
+                    <span style="display: block; font-weight: 700; font-size: 18px;">Email Support</span>
+                    <span style="color: #64748b; font-size: 14px;">skynet1consult@gmail.com</span>
+                </div>
+            </a>
         </div>
 
-        <ul class="nav-links">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="about.html">About</a></li>
-            <li><a href="services.html">Services</a></li>
-            <li><a href="contact.html" class="active">Contact</a></li>
-        </ul>
-    </nav>
-
-    <section class="hero-split" style="padding-top:180px">
-        <div class="hero-container">
-            <div class="hero-content-left">
-                <h1>Ready to <br><span class="highlight-blue">Join Us?</span></h1>
-                <p class="hero-description">Fill out the form and our expert consultants will get back to you within 24 hours.</p>
-                <div style="margin-top: 30px;">
-                    <p><strong>Email:</strong> skynet1consult@gmail.com </p>
-                    <p><strong>WhatsApp:</strong> +233 209 893 750</p>
-                </div>
-            </div>
-            <div class="contact-form">
-                <form action="/contact" method="POST">
+        <div class="contact-form-card">
+            <h3 class="form-title">Send a Message</h3>
+            <form action="https://formspree.io/f/your-id" method="POST"> <div class="input-row">
                     <input type="text" name="name" placeholder="Full Name" required>
                     <input type="email" name="email" placeholder="Email Address" required>
-                    <textarea name="message" rows="5" placeholder="How can we help you?" required></textarea>
-                    <button type="submit" class="btn btn-navy" style="width:100%">Send Message</button>
-                </form>
-            </div>
+                </div>
+                
+                <select name="subject" style="margin-bottom: 20px;">
+                    <option value="general">General Inquiry</option>
+                    <option value="unimatcher">UniMatcher Support</option>
+                    <option value="consultation">Academic Consultation</option>
+                    <option value="vouchers">Voucher Purchase</option>
+                </select>
+
+                <textarea name="message" rows="5" placeholder="How can we help you?" required style="margin-bottom: 20px;"></textarea>
+                
+                <button type="submit" class="btn-premium">Send Message →</button>
+            </form>
         </div>
-    </section>
+    </main>
 
-    <footer>© 2026 SkyNet Consult. All Rights Reserved.</footer>
-
+    <script src="global.js"></script>
     <script>
+        // Interactive Mobile Menu logic
         const menu = document.querySelector('#mobile-menu');
         const menuLinks = document.querySelector('.nav-links');
         const bars = document.querySelectorAll('.bar');
 
-        menu.addEventListener('click', function() {
+        menu.addEventListener('click', () => {
             menuLinks.classList.toggle('active');
-            
-            // Animate hamburger to X
             if(menuLinks.classList.contains('active')) {
                 bars[0].style.transform = "rotate(45deg) translate(5px, 6px)";
                 bars[1].style.opacity = "0";
                 bars[2].style.transform = "rotate(-45deg) translate(5px, -6px)";
             } else {
-                bars[0].style.transform = "none";
+                bars.forEach(bar => bar.style.transform = "none");
                 bars[1].style.opacity = "1";
-                bars[2].style.transform = "none";
             }
-        });
-
-        // Close menu if a link is clicked
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                menuLinks.classList.remove('active');
-                bars[0].style.transform = "none";
-                bars[1].style.opacity = "1";
-                bars[2].style.transform = "none";
-            });
         });
     </script>
 </body>
