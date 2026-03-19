@@ -23,19 +23,19 @@
             font-family: 'Inter', sans-serif;
         }
 
-        /* --- PREVENT CONFLICT WITH GLOBAL.JS --- */
+        /* --- WRAPPER --- */
         .coming-soon-wrapper {
-            min-height: 80vh;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 100px 5%;
+            padding: 80px 5%;
             position: relative;
             text-align: center;
+            box-sizing: border-box;
         }
 
-        /* --- AMBIENT OVERLAY --- */
         .glow-bg {
             position: absolute;
             top: 0;
@@ -47,33 +47,33 @@
             z-index: -1;
         }
 
+        /* --- BADGE & TITLES --- */
         .status-badge {
             background: rgba(245, 158, 11, 0.1);
             border: 1px solid var(--uni-orange);
             color: var(--uni-orange);
             padding: 8px 24px;
             border-radius: 100px;
-            font-size: 13px;
+            font-size: clamp(10px, 3vw, 13px);
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 3px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             display: inline-block;
             animation: pulse 2s infinite;
         }
 
         @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.8; }
-            100% { transform: scale(1); opacity: 1; }
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
         .main-title {
-            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            font-size: clamp(2rem, 8vw, 4.5rem);
             font-weight: 900;
             letter-spacing: -2px;
-            line-height: 1;
-            margin-bottom: 25px;
+            line-height: 1.1;
+            margin: 0 0 20px 0;
         }
 
         .gradient-text {
@@ -84,25 +84,49 @@
 
         .sub-text {
             color: #94a3b8;
-            font-size: 19px;
+            font-size: clamp(16px, 4vw, 19px);
             max-width: 600px;
-            margin: 0 auto 50px;
+            margin: 0 auto 40px;
             line-height: 1.6;
         }
 
-        /* --- STACKED PREVIEW --- */
+        /* --- COUNTDOWN --- */
+        .countdown-grid {
+            display: flex;
+            justify-content: center;
+            gap: clamp(15px, 5vw, 40px);
+            margin-bottom: 50px;
+        }
+
+        .time-box span {
+            display: block;
+            font-size: clamp(28px, 6vw, 48px);
+            font-weight: 900;
+            color: white;
+            line-height: 1;
+        }
+
+        .time-box label {
+            font-size: 10px;
+            color: var(--uni-blue);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        /* --- PREVIEW BOX --- */
         .preview-box {
             position: relative;
             width: 100%;
-            max-width: 700px;
-            height: 350px;
-            margin: 0 auto 60px;
+            max-width: 600px;
+            height: clamp(200px, 40vh, 350px);
+            margin: 0 auto 40px;
         }
 
         .preview-img {
             position: absolute;
             width: 80%;
-            border-radius: 20px;
+            border-radius: clamp(10px, 3vw, 20px);
             border: 1px solid var(--glass-border);
             left: 50%;
             transform: translateX(-50%);
@@ -110,75 +134,82 @@
         }
 
         .img-1 { top: 0; z-index: 1; opacity: 0.2; filter: blur(10px); transform: translateX(-60%) scale(0.9); }
-        .img-2 { top: 30px; z-index: 2; opacity: 0.5; filter: blur(4px); }
+        .img-2 { top: 30px; z-index: 2; opacity: 0.6; filter: blur(4px); }
         
-        .preview-box:hover .img-1 { transform: translateX(-80%) rotate(-5deg); opacity: 0.4; filter: blur(2px); }
-        .preview-box:hover .img-2 { transform: translateX(-20%) rotate(5deg); opacity: 0.8; filter: blur(0); }
-
-        /* --- COUNTDOWN --- */
-        .countdown-grid {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            margin-bottom: 60px;
+        /* Interactive hover for desktop */
+        @media (min-width: 1024px) {
+            .preview-box:hover .img-1 { transform: translateX(-80%) rotate(-5deg); opacity: 0.4; filter: blur(2px); }
+            .preview-box:hover .img-2 { transform: translateX(-20%) rotate(5deg); opacity: 0.9; filter: blur(0); }
         }
 
-        .time-box span {
-            display: block;
-            font-size: 48px;
-            font-weight: 900;
-            color: white;
-            line-height: 1;
-        }
-
-        .time-box label {
-            font-size: 12px;
-            color: var(--uni-blue);
-            text-transform: uppercase;
-            font-weight: 700;
-            letter-spacing: 2px;
-        }
-
-        /* --- FORM --- */
+        /* --- NOTIFY FORM --- */
         .notify-form {
             background: var(--glass);
             backdrop-filter: blur(20px);
-            padding: 10px;
+            padding: 8px;
             border-radius: 20px;
             border: 1px solid var(--glass-border);
             display: flex;
+            width: 100%;
             max-width: 500px;
             margin: 0 auto;
+            box-sizing: border-box;
         }
 
         .notify-form input {
             background: transparent;
             border: none;
             color: white;
-            padding: 15px 25px;
+            padding: 12px 20px;
             flex: 1;
             outline: none;
             font-size: 16px;
+            min-width: 0; /* Prevents overflow in flexbox */
         }
 
         .btn-launch {
             background: var(--uni-blue);
             color: white;
             border: none;
-            padding: 15px 30px;
+            padding: 12px 25px;
             border-radius: 15px;
             font-weight: 700;
             cursor: pointer;
             transition: 0.3s;
+            white-space: nowrap;
         }
 
-        .btn-launch:hover { background: #2563eb; transform: translateY(-2px); }
+        /* --- MOBILE ADJUSTMENTS --- */
+        @media (max-width: 600px) {
+            .coming-soon-wrapper { padding: 60px 20px; }
+            
+            .notify-form {
+                flex-direction: column;
+                background: transparent;
+                border: none;
+                padding: 0;
+                gap: 12px;
+            }
 
-        @media (max-width: 768px) {
-            .countdown-grid { gap: 20px; }
-            .time-box span { font-size: 32px; }
-            .notify-form { flex-direction: column; padding: 20px; background: none; border: none; }
-            .notify-form input { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 15px; margin-bottom: 10px; }
+            .notify-form input {
+                background: var(--glass);
+                border: 1px solid var(--glass-border);
+                border-radius: 15px;
+                padding: 18px;
+                width: 100%;
+            }
+
+            .btn-launch {
+                width: 100%;
+                padding: 18px;
+            }
+
+            .preview-box {
+                height: 220px; /* Force height so it doesn't collapse */
+            }
+            
+            .img-1 { transform: translateX(-55%) scale(0.85); }
+            .img-2 { transform: translateX(-45%) scale(0.95); opacity: 0.8; filter: blur(2px); }
         }
     </style>
 </head>
@@ -219,8 +250,8 @@
         </div>
 
         <div class="preview-box">
-            <img src="images/dash.png" class="preview-img img-1" alt="Dashboard Preview">
-            <img src="images/UI UniMatcher.png" class="preview-img img-2" alt="UI Preview">
+            <img src="images/dash.png" class="preview-img img-1" alt="Dashboard">
+            <img src="images/UI UniMatcher.png" class="preview-img img-2" alt="Interface">
         </div>
 
         <div class="notify-form">
@@ -232,7 +263,6 @@
     <script src="global.js"></script>
     
     <script>
-        // TARGET DATE: April 1st, 2026
         const targetDate = new Date("April 1, 2026 00:00:00").getTime();
 
         const timer = setInterval(function() {
@@ -244,10 +274,10 @@
             const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const s = Math.floor((distance % (1000 * 60)) / 1000);
 
-            document.getElementById("days").innerHTML = d.toString().padStart(2, '0');
-            document.getElementById("hours").innerHTML = h.toString().padStart(2, '0');
-            document.getElementById("minutes").innerHTML = m.toString().padStart(2, '0');
-            document.getElementById("seconds").innerHTML = s.toString().padStart(2, '0');
+            document.getElementById("days").innerText = d.toString().padStart(2, '0');
+            document.getElementById("hours").innerText = h.toString().padStart(2, '0');
+            document.getElementById("minutes").innerText = m.toString().padStart(2, '0');
+            document.getElementById("seconds").innerText = s.toString().padStart(2, '0');
 
             if (distance < 0) {
                 clearInterval(timer);
