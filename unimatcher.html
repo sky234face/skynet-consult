@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniMatcher | Evolution Coming Soon</title>
+    <link rel="icon" type="image/png" href="images/Skynet.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-bg: #020617;
+            --uni-blue: #3b82f6;
+            --uni-orange: #f59e0b;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- AMBIENT BACKGROUND --- */
+        .glow {
+            position: absolute;
+            width: 40vw;
+            height: 40vw;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+            top: -10%;
+            right: -10%;
+            z-index: -1;
+        }
+
+        .glow-2 {
+            position: absolute;
+            width: 50vw;
+            height: 50vw;
+            background: radial-gradient(circle, rgba(245, 158, 11, 0.08) 0%, transparent 70%);
+            bottom: -20%;
+            left: -10%;
+            z-index: -1;
+        }
+
+        /* --- CONTENT WRAPPER --- */
+        .container {
+            text-align: center;
+            padding: 20px;
+            max-width: 900px;
+            z-index: 10;
+        }
+
+        .product-logo {
+            height: 80px;
+            margin-bottom: 40px;
+            filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.3));
+        }
+
+        .status-badge {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid var(--uni-blue);
+            color: var(--uni-blue);
+            padding: 8px 20px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 25px;
+            display: inline-block;
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 900;
+            letter-spacing: -2px;
+            margin: 0 0 20px 0;
+            line-height: 0.9;
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p {
+            color: #94a3b8;
+            font-size: 18px;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+
+        /* --- PREVIEW STACK --- */
+        .preview-stack {
+            position: relative;
+            height: 300px;
+            margin-bottom: 60px;
+        }
+
+        .preview-img {
+            position: absolute;
+            width: 500px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            opacity: 0.3;
+            filter: blur(8px) grayscale(100%);
+            transition: 0.5s ease;
+        }
+
+        .preview-img.main {
+            opacity: 0.6;
+            filter: blur(4px);
+            top: 20px;
+        }
+
+        .preview-img.back {
+            width: 450px;
+            top: 0;
+            z-index: -1;
+        }
+
+        /* --- GLASS FORM --- */
+        .notify-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            padding: 40px;
+            border-radius: 30px;
+            border: 1px solid var(--glass-border);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            background: rgba(255,255,255,0.05);
+            padding: 8px;
+            border-radius: 15px;
+            border: 1px solid var(--glass-border);
+        }
+
+        input {
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            flex-grow: 1;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .btn-notify {
+            background: var(--uni-blue);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-notify:hover {
+            background: #2563eb;
+            transform: scale(1.05);
+        }
+
+        /* --- COUNTDOWN --- */
+        .timer {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .timer-unit span {
+            display: block;
+            font-size: 32px;
+            font-weight: 800;
+            color: white;
+        }
+
+        .timer-unit label {
+            font-size: 11px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 768px) {
+            .preview-img { width: 90%; }
+            .input-group { flex-direction: column; background: transparent; border: none; padding: 0; }
+            input { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 10px; margin-bottom: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="glow"></div>
+    <div class="glow-2"></div>
+
+    <div class="container">
+        <img src="images/unimatcher-logo.png" alt="UniMatcher" class="product-logo">
+        
+        <div class="status-badge">Next-Gen Release</div>
+        
+        <h1><span class="gradient-text">Matching You To</span><br>
+            <span style="color: var(--uni-orange);">Higher Education.</span>
+        </h1>
+        
+        <p>We're rebuilding the algorithm to be faster, smarter, and more precise. Get notified the second we launch the 2026 upgrade.</p>
+
+        <div class="preview-stack">
+            <img src="images/dash.png" class="preview-img back" alt="Teaser">
+            <img src="images/UI UniMatcher.jpg" class="preview-img main" alt="Teaser">
+        </div>
+
+        <div class="notify-card">
+            <h3 style="margin-top: 0; margin-bottom: 20px; font-size: 18px;">Join the Early Access List</h3>
+            <div class="input-group">
+                <input type="email" placeholder="Enter your email address">
+                <button class="btn-notify">Notify Me</button>
+            </div>
+        </div>
+
+        <div class="timer">
+            <div class="timer-unit">
+                <span id="days">08</span>
+                <label>Days</label>
+            </div>
+            <div class="timer-unit">
+                <span id="hours">14</span>
+                <label>Hours</label>
+            </div>
+            <div class="timer-unit">
+                <span id="mins">22</span>
+                <label>Mins</label>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple Countdown Logic
+        function updateTimer() {
+            const launchDate = new Date();
+            launchDate.setDate(launchDate.getDate() + 8); // Fake 8-day countdown
+
+            // You can replace this with a real countdown logic if you have a launch date!
+        }
+    </script>
+</body>
+</html>
