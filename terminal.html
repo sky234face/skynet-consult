@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/src/assets/unimatcher-logo.png">
+    <title>Command Terminal | Vanguard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;700;800&family=JetBrains+Mono:wght@400;700&display=swap');
+        
+        body { 
+            background: #020617; 
+            color: #f8fafc; 
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(30, 58, 138, 0.2) 0px, transparent 50%),
+                linear-gradient(rgba(15, 23, 42, 0.9), rgba(2, 6, 23, 1));
+        }
+
+        .terminal-input {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .gold-glow {
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.1);
+        }
+
+        .scanning-line {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #fbbf24, transparent);
+            animation: scan 3s linear infinite;
+            position: absolute;
+            width: 100%;
+            z-index: 20;
+        }
+
+        @keyframes scan {
+            0% { top: 0%; }
+            100% { top: 100%; }
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-6">
+
+    <div class="max-w-md w-full animate__animated animate__fadeIn">
+        
+        <div class="flex justify-center mb-8">
+            <div class="w-20 h-20 rounded-full border border-yellow-500/30 flex items-center justify-center bg-yellow-500/5 relative">
+                <div class="scanning-line opacity-40"></div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="text-yellow-500" viewBox="0 0 16 16">
+                    <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+                </svg>
+            </div>
+        </div>
+
+        <div class="text-center mb-10">
+            <h1 class="text-2xl font-black tracking-widest uppercase text-white">Command <span class="text-yellow-500">Terminal</span></h1>
+            <p class="text-slate-500 text-[10px] font-mono mt-2 tracking-widest uppercase">Encryption Level: AES-256 Authorized Only</p>
+        </div>
+
+      <div class="bg-slate-900/80 border border-white/5 p-8 rounded-[2rem] backdrop-blur-2xl shadow-2xl gold-glow">
+    <form id="login-form" class="space-y-5">
+        
+        <div>
+            <label class="block text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 mb-3 ml-1">Agent Identification</label>
+            <input type="text" id="agent-code" required placeholder="AGENT-000" 
+                class="w-full terminal-input rounded-xl px-5 py-4 text-sm focus:outline-none focus:border-yellow-500/50 transition-all text-white placeholder:text-slate-800 uppercase">
+        </div>
+
+        <div>
+            <label class="block text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 mb-3 ml-1">Access Cipher</label>
+            <input type="text" id="access-cipher" required placeholder="XXXX-XXXX" 
+                class="w-full terminal-input rounded-xl px-5 py-4 text-sm focus:outline-none focus:border-yellow-500/50 transition-all text-yellow-500 placeholder:text-slate-800 font-mono uppercase">
+        </div>
+
+        <button type="submit" id="login-btn" class="w-full bg-white text-black font-black uppercase tracking-[0.2em] py-4 rounded-xl hover:bg-yellow-500 transition-all active:scale-95 text-xs mt-4">
+            Initialize Session
+        </button>
+
+    </form>
+
+    <div id="error-msg" class="hidden mt-4 text-center text-red-500 text-[10px] font-bold uppercase tracking-widest animate__animated animate__shakeX">
+        Access Denied: Invalid Credentials
+    </div>
+</div>
+        <div class="mt-8 flex justify-between items-center px-4">
+            <a href="enlist.html" class="text-[9px] font-black text-slate-500 hover:text-yellow-500 transition-all uppercase tracking-widest italic">Awaiting Clearance?</a>
+            <a href="leaderboard.html" class="text-[9px] font-black text-slate-500 hover:text-white transition-all uppercase tracking-widest italic">Disconnect</a>
+        </div>
+
+    </div>
+
+   <script>
+        const API_BASE = "https://api.unimatcher-skynetconsult.com/api";
+        const loginForm = document.getElementById('login-form');
+        const loginBtn = document.getElementById('login-btn');
+        const errorMsg = document.getElementById('error-msg');
+
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // UI Feedback
+            loginBtn.innerText = "VERIFYING CLEARANCE...";
+            loginBtn.classList.add('opacity-50', 'pointer-events-none');
+            errorMsg.classList.add('hidden');
+
+            const code = document.getElementById('agent-code').value.toUpperCase().trim();
+            const cipher = document.getElementById('access-cipher').value.trim();
+
+            try {
+                // Send Code + Cipher to your Worker API
+                const response = await fetch(`${API_BASE}/agent/terminal-access`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ agentCode: code, accessCipher: cipher })
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    // Store session data so HQ knows who is logged in
+                    localStorage.setItem('vanguard_session', JSON.stringify(result.agent));
+                    window.location.href = "hq.html";
+                } else {
+                    throw new Error("Invalid credentials");
+                }
+            } catch (err) {
+                // Reset UI on failure
+                loginBtn.innerText = "INITIALIZE SESSION";
+                loginBtn.classList.remove('opacity-50', 'pointer-events-none');
+                errorMsg.classList.remove('hidden');
+                
+                // Shake the box for a "Dope" failure effect
+                const box = loginForm.parentElement;
+                box.classList.add('animate__shakeX');
+                setTimeout(() => box.classList.remove('animate__shakeX'), 500);
+            }
+        });
+    </script>
+</body>
+</html>

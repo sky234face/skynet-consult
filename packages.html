@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services & Consultation | UniMatcher</title>
+    <link rel="icon" type="image/png" href="/src/assets/unimatcher-logo.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: { extend: { colors: { brandBlue: '#003B73', brandOrange: '#F28C00' }, fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] } } }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 min-h-screen">
+    <main class="max-w-6xl mx-auto px-6 py-20">
+        <div class="text-center mb-16">
+            <h2 class="text-brandOrange font-bold uppercase tracking-widest text-sm mb-4">UniMatcher Concierge</h2>
+            <h1 class="text-5xl font-black text-slate-900 mb-6">Expert Guidance & Forms</h1>
+            <p class="text-slate-500 max-w-xl mx-auto text-lg font-medium">Get your results checked, buy admission forms, or book a 1-on-1 academic consultation via WhatsApp.</p>
+        </div>
+
+        <div id="services-grid" class="grid md:grid-cols-3 gap-8">
+            </div>
+
+        <div class="mt-20 p-10 bg-brandBlue rounded-[3rem] text-center text-white relative overflow-hidden">
+            <div class="relative z-10">
+                <h2 class="text-3xl font-black mb-4">Need something else?</h2>
+                <p class="text-blue-200 mb-8">If the form or service you need isn't listed, chat with our support team directly.</p>
+                <button onclick="contactWhatsApp('General Inquiry')" class="bg-brandOrange hover:bg-orange-600 text-white px-10 py-4 rounded-2xl font-bold transition transform hover:scale-105">
+                    <i class="fab fa-whatsapp mr-2"></i> Chat with us now
+                </button>
+            </div>
+            <div class="absolute -right-20 -bottom-20 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+        </div>
+    </main>
+<script src="js/global.js"></script>
+    <script>
+        const SERVICES = [
+            {
+                id: 'consult',
+                name: 'Academic Consultation',
+                price: '50',
+                icon: 'fa-user-graduate',
+                is_popular: true,
+                badge: 'Highly Rated',
+                features: ['1-on-1 Zoom/Voice Call', 'Program Selection Advice', 'Career Path Mapping', '24h Follow-up Support'],
+                wa_text: 'Hello UniMatcher! I want to book a 1-on-1 Academic Consultation session.'
+            },
+            {
+                id: 'checkers',
+                name: 'Result Checkers',
+                price: '25',
+                icon: 'fa-ticket-alt',
+                is_popular: false,
+                badge: 'Instant Delivery',
+                features: ['WASSCE Result Checkers', 'BECE Result Checkers', 'Instant Serial & PIN', 'Verified by WAEC'],
+                wa_text: 'Hello UniMatcher! I want to buy a WASSCE/BECE Result Checker.'
+            },
+            {
+                id: 'forms',
+                name: 'Admission Forms',
+                price: 'Varies',
+                icon: 'fa-file-signature',
+                is_popular: false,
+                badge: 'All Institutions',
+                features: ['University Forms', 'Nursing/Training Colleges', 'Military/Police Forms', 'Assisted Application'],
+                wa_text: 'Hello UniMatcher! I am looking for a specific University/Security Service admission form.'
+            }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('services-grid');
+            container.innerHTML = SERVICES.map(svc => `
+                <div class="bg-white p-10 rounded-[3rem] border-2 ${svc.is_popular ? 'border-brandBlue shadow-2xl shadow-blue-900/10' : 'border-slate-100'} relative flex flex-col transition hover:shadow-xl group">
+                    ${svc.badge ? `<div class="absolute -top-4 left-1/2 -translate-x-1/2 ${svc.is_popular ? 'bg-brandBlue' : 'bg-slate-800'} text-white px-5 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest">${svc.badge}</div>` : ''}
+                    
+                    <div class="w-16 h-16 rounded-2xl ${svc.is_popular ? 'bg-blue-50 text-brandBlue' : 'bg-slate-50 text-slate-400'} flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition">
+                        <i class="fas ${svc.icon}"></i>
+                    </div>
+
+                    <h3 class="font-black text-slate-900 text-xl mb-2">${svc.name}</h3>
+                    <div class="flex items-baseline gap-1 mb-8">
+                        <span class="text-sm font-bold text-slate-400 uppercase">From</span>
+                        <span class="text-2xl font-bold text-slate-900">${svc.price === 'Varies' ? '' : 'GHS'}</span>
+                        <span class="text-5xl font-black text-slate-900">${svc.price}</span>
+                    </div>
+
+                    <ul class="space-y-4 mb-10 flex-grow">
+                        ${svc.features.map(f => `
+                            <li class="flex items-center gap-3 text-slate-600 text-sm font-medium">
+                                <i class="fas fa-check text-green-500 text-xs"></i> ${f}
+                            </li>
+                        `).join('')}
+                    </ul>
+
+                    <button onclick="contactWhatsApp('${svc.wa_text}')" class="w-full py-5 rounded-2xl font-black transition flex items-center justify-center gap-2 ${svc.is_popular ? 'bg-brandBlue text-white shadow-lg shadow-blue-900/20' : 'bg-slate-900 text-white'} hover:opacity-90">
+                        <i class="fab fa-whatsapp text-xl"></i> Order via WhatsApp
+                    </button>
+                </div>
+            `).join('');
+        });
+
+        function contactWhatsApp(message) {
+            const phone = "233547933440"; // REPLACE WITH YOUR WHATSAPP NUMBER
+            const encodedText = encodeURIComponent(message);
+            window.open(`https://wa.me/${phone}?text=${encodedText}`, '_blank');
+        }
+    </script>
+</body>
+</html>

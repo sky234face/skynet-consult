@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pathfinder AI | Discovery</title>
+    <link rel="icon" type="image/png" href="/src/assets/unimatcher-logo.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFC; }
+        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.3); }
+        .step-content { display: none; transition: all 0.5s ease; }
+        .step-content.active { display: block; animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .faculty-card { transition: all 0.3s ease; cursor: pointer; border: 2px solid transparent; }
+        .faculty-card:hover { transform: translateY(-5px); background: white; border-color: #003B73; }
+        .faculty-card.selected { border-color: #F28C00; background: #FFFBF0; box-shadow: 0 10px 20px -5px rgba(242, 140, 0, 0.2); }
+        select:focus, input:focus { outline: none; ring: 2px; ring-color: #003B73; }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800">
+
+    <div class="max-w-5xl mx-auto px-6 py-12">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-black text-[#003B73] tracking-tight">Pathfinder <span class="text-[#F28C00]">AI</span></h1>
+            <p class="text-slate-500 font-medium">Professional Academic Discovery & Placement Engine</p>
+        </header>
+
+        <form id="discovery-form" class="relative">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+    <div class="flex flex-col gap-2">
+        <label class="text-[10px] font-black uppercase text-slate-400 ml-2">Verified Name</label>
+        <input type="text" id="display-name" readonly 
+               class="w-full p-4 rounded-2xl border border-slate-100 bg-slate-200 text-slate-500 cursor-not-allowed outline-none font-bold">
+    </div>
+    <div class="flex flex-col gap-2">
+        <label class="text-[10px] font-black uppercase text-slate-400 ml-2">WhatsApp Number</label>
+        <input type="tel" id="student-phone" placeholder="e.g. 054XXXXXXX" 
+               class="w-full p-4 rounded-2xl border border-slate-100 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-brandOrange outline-none transition-all font-bold">
+    </div>
+</div>
+            <div id="step-1" class="step-content active">
+                <div class="mb-8 text-center">
+                    <h2 class="text-2xl font-extrabold text-slate-900">Which faculty interests you?</h2>
+                    <p class="text-slate-400 text-sm mt-1">Select your area of study to begin the scan.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="faculty-grid">
+                    </div>
+
+                <div class="mt-12 flex justify-center">
+                    <button type="button" onclick="goToStep(2)" class="px-12 py-5 bg-[#003B73] text-white rounded-2xl font-black shadow-xl hover:scale-105 transition active:scale-95">
+                        Continue to Grades <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div id="step-2" class="step-content">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    
+                    <div class="lg:col-span-2 space-y-8">
+                        <div class="glass p-8 rounded-[2.5rem] shadow-sm">
+                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6 flex items-center gap-2">
+                                <i class="fas fa-star text-[#F28C00]"></i> Core Subjects
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="core-inputs-container">
+                                </div>
+                        </div>
+
+                        <div class="glass p-8 rounded-[2.5rem] shadow-sm">
+                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6 flex items-center gap-2">
+                                <i class="fas fa-search text-[#003B73]"></i> Searchable Electives
+                            </h3>
+                            <div class="space-y-4" id="elective-inputs-container">
+                                </div>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-1">
+                        <div class="glass p-8 rounded-[2.5rem] sticky top-8 text-center border-2 border-slate-100">
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Live Aggregate</p>
+                            <div id="live-aggregate" class="text-7xl font-black text-[#003B73] mb-2">--</div>
+                            <p class="text-xs font-bold text-slate-500 mb-8">Calculated: Best 3 Cores + Best 3 Electives</p>
+                            
+                            <button type="submit" class="w-full py-5 bg-[#F28C00] text-white rounded-2xl font-black text-lg shadow-xl shadow-orange-900/20 hover:scale-[1.03] transition">
+                                RUN PATHFINDER AI
+                            </button>
+                            <button type="button" onclick="goToStep(1)" class="mt-4 text-slate-400 font-bold text-sm hover:text-slate-600 transition">Back to Faculty</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <datalist id="electives-datalist"></datalist>
+    <script src="js/global.js"></script>
+    <script src="js/discovery.js"></script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Scholarships | UniMatcher</title>
+    <link rel="icon" type="image/png" href="/src/assets/unimatcher-logo.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = { 
+            theme: { 
+                extend: { 
+                    colors: { brandBlue: '#003B73', brandOrange: '#F28C00' }, 
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] } 
+                } 
+            } 
+        }
+    </script>
+    <style>
+        body { background: #f8fafc; overflow-x: hidden; width: 100vw; }
+        .scholarship-card { 
+            transition: all 0.3s ease;
+            border-radius: 1.5rem;
+        }
+        @media (min-width: 768px) { .scholarship-card { border-radius: 2rem; } }
+        
+        /* Pulse for high-value scholarships */
+        .premium-glow { box-shadow: 0 0 20px rgba(242, 140, 0, 0.15); border: 1px solid rgba(242, 140, 0, 0.3); }
+        
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="min-h-screen text-slate-900">
+
+    <main class="max-w-4xl mx-auto px-4 py-10 md:py-20">
+        <header class="text-center mb-12">
+            <div class="inline-flex items-center gap-2 px-4 py-2 bg-orange-50 rounded-full text-brandOrange text-[10px] font-black uppercase tracking-widest mb-4">
+                <i class="fas fa-stars"></i> 2026 Financial Aid Hub
+            </div>
+            <h1 class="text-4xl md:text-5xl font-black text-brandBlue tracking-tight mb-3">Scholarships</h1>
+            <p class="text-slate-500 font-medium text-sm md:text-base">Find and apply for verified funding opportunities.</p>
+        </header>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-10">
+            <div class="bg-white p-4 rounded-2xl border border-slate-100 text-center">
+                <span class="block text-[10px] font-black text-slate-400 uppercase tracking-tighter">Total Value</span>
+                <span class="text-lg font-black text-brandBlue">GH₵ 2.5M+</span>
+            </div>
+            <div class="bg-white p-4 rounded-2xl border border-slate-100 text-center">
+                <span class="block text-[10px] font-black text-slate-400 uppercase tracking-tighter">Active Funds</span>
+                <span class="text-lg font-black text-brandOrange" id="fund-count">--</span>
+            </div>
+            <div class="hidden md:block bg-white p-4 rounded-2xl border border-slate-100 text-center">
+                <span class="block text-[10px] font-black text-slate-400 uppercase tracking-tighter">Verified</span>
+                <span class="text-lg font-black text-emerald-500">100%</span>
+            </div>
+        </div>
+
+        <div id="scholarship-list" class="space-y-6">
+            <div class="animate-pulse space-y-4">
+                <div class="h-40 bg-white border border-slate-100 rounded-[2rem]"></div>
+                <div class="h-40 bg-white border border-slate-100 rounded-[2rem]"></div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/global.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        const API_URL = 'https://api.unimatcher-skynetconsult.com/api';
+        const container = document.getElementById('scholarship-list');
+        const countEl = document.getElementById('fund-count');
+
+        try {
+            const res = await fetch(`${API_URL}/scholarships`);
+            const data = await res.json();
+
+            if (!Array.isArray(data) || data.length === 0) {
+                container.innerHTML = `
+                    <div class="p-20 text-center text-slate-400 bg-white rounded-[2rem] border-2 border-dashed border-slate-100">
+                        <i class="fas fa-folder-open text-4xl mb-4 opacity-20"></i>
+                        <p class="font-bold uppercase text-xs tracking-widest">No scholarships found</p>
+                    </div>`;
+                return;
+            }
+
+            countEl.innerText = data.length;
+
+            container.innerHTML = data.map(s => {
+                // Date formatting logic
+                let deadlineDate = 'TBA';
+                let isUrgent = false;
+                if (s.deadline) {
+                    const d = new Date(s.deadline);
+                    const today = new Date();
+                    const diffTime = d - today;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    
+                    isUrgent = diffDays > 0 && diffDays <= 14; // Less than 2 weeks left
+                    
+                    deadlineDate = isNaN(d) ? s.deadline : d.toLocaleDateString('en-GB', {
+                        day: 'numeric', month: 'short', year: 'numeric'
+                    });
+                }
+
+                const applyLink = (s.link && s.link !== '#' && s.link !== 'null') ? s.link : null;
+                const isFullRide = (s.amount || "").toLowerCase().includes('full');
+
+                return `
+                    <div class="scholarship-card bg-white border border-slate-100 shadow-sm p-6 md:p-8 flex flex-col md:flex-row gap-6 relative overflow-hidden ${isFullRide ? 'premium-glow' : ''}">
+                        
+                        <div class="flex-grow">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="w-12 h-12 shrink-0 ${isFullRide ? 'bg-brandOrange text-white' : 'bg-slate-50 text-brandBlue'} rounded-xl flex items-center justify-center text-xl shadow-sm">
+                                    <i class="fas ${isFullRide ? 'fa-crown' : 'fa-award'}"></i>
+                                </div>
+                                <div>
+                                    <span class="block text-[9px] font-black text-slate-400 uppercase tracking-widest">${s.provider}</span>
+                                    <h3 class="text-xl font-extrabold text-slate-900 leading-tight">${s.name}</h3>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-wrap gap-2 mb-6">
+                                <span class="px-3 py-1 bg-blue-50 text-brandBlue rounded-lg text-[10px] font-bold uppercase tracking-tight">
+                                    <i class="fas fa-money-bill-wave mr-1"></i> ${s.amount || 'Partial'}
+                                </span>
+                                <span class="px-3 py-1 bg-slate-100 text-slate-600 rounded-lg text-[10px] font-bold uppercase tracking-tight">
+                                    <i class="fas fa-user-graduate mr-1"></i> Aggregate: ${s.min_aggregate || 'Open'}
+                                </span>
+                                <span class="px-3 py-1 bg-slate-100 text-slate-600 rounded-lg text-[10px] font-bold uppercase tracking-tight">
+                                    <i class="fas fa-globe mr-1"></i> ${s.country_restriction || 'Ghana'}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="shrink-0 flex flex-col justify-center border-t md:border-t-0 md:border-l border-slate-100 pt-6 md:pt-0 md:pl-8 min-w-[180px]">
+                            <div class="mb-4 text-center md:text-right">
+                                <span class="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Application Deadline</span>
+                                <span class="text-sm font-extrabold ${isUrgent ? 'text-red-500' : 'text-slate-800'}">
+                                    ${deadlineDate} ${isUrgent ? '🔥' : ''}
+                                </span>
+                            </div>
+
+                            ${applyLink ? 
+                                `<a href="${applyLink}" target="_blank" class="w-full block text-center px-6 py-4 bg-brandBlue text-white text-xs font-black uppercase tracking-widest rounded-xl hover:bg-brandOrange transition-colors shadow-lg shadow-brandBlue/10">Apply Online</a>` : 
+                                `<button disabled class="w-full block px-6 py-4 bg-slate-100 text-slate-400 text-xs font-black uppercase tracking-widest rounded-xl cursor-not-allowed italic">Internal Only</button>`
+                            }
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        } catch (e) {
+            container.innerHTML = `<div class="p-10 text-center text-red-400 font-bold">Failed to sync with scholarship database.</div>`;
+        }
+    });
+    </script>
+</body>
+</html>

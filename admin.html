@@ -1,0 +1,1900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Command Center | UniMatcher</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="/src/assets/unimatcher-logo.png">
+    <meta name="theme-color" content="#003B73">
+    <script>
+        tailwind.config = {
+            theme: { extend: { colors: { brandBlue: '#003B73', brandOrange: '#F28C00', adminDark: '#0f172a' } } }
+        }
+    </script>
+    <script>
+        (function() {
+            const user = JSON.parse(localStorage.getItem('user_info'));
+            if (!user || user.role !== 'admin') {
+                alert("Restricted Access: Admins Only");
+                window.location.href = '/src/pages/login.html';
+            }
+        })();
+    </script>
+    <style>
+        /* Custom Scrollbar for a Premium Look */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0f172a; /* matches adminDark */
+}
+
+::-webkit-scrollbar-thumb {
+    background: #1e293b;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #003B73; /* matches brandBlue */
+}
+
+/* Fix for Sidebar Scrolling */
+aside {
+    overflow-y: auto;
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: #1e293b #0f172a;
+}
+
+/* Ensure the nav links don't get squished */
+nav {
+    flex-shrink: 0;
+}
+    </style>
+</head>
+<body class="bg-slate-50 flex min-h-screen font-['Plus_Jakarta_Sans']">
+
+    <aside class="w-64 bg-adminDark text-slate-400 flex flex-col fixed h-full z-20">
+    <div class="p-8 text-white font-black text-2xl border-b border-slate-800">
+        Uni<span class="text-brandOrange">Admin</span>
+    </div>
+    
+    <nav class="flex-grow p-4 space-y-2 text-sm font-bold overflow-y-auto custom-scroll">
+        <a href="#" onclick="showSection('stats')" class="nav-link flex items-center gap-3 p-4 bg-brandBlue text-white rounded-xl transition shadow-lg shadow-blue-900/20">
+            <i class="fas fa-chart-line"></i> Overview
+        </a>
+        
+        <div class="pt-6 pb-2 px-4 text-[10px] uppercase tracking-widest text-slate-600">Data Management</div>
+        
+        <a href="#" onclick="showSection('academic-data')" class="nav-link flex items-center gap-3 p-4 hover:bg-slate-800 rounded-xl transition">
+            <i class="fas fa-database"></i> Academic Data
+        </a>
+
+        <a href="#" onclick="showSection('db-explorer')" class="nav-link flex items-center gap-3 p-4 hover:bg-slate-800 rounded-xl transition text-blue-400">
+            <i class="fas fa-search-plus"></i> DB Explorer (CRUD)
+        </a>
+
+        <a href="#" onclick="showSection('grades')" class="nav-link flex items-center gap-3 p-4 hover:bg-slate-800 rounded-xl transition">
+            <i class="fas fa-list-ol"></i> Grade Mapping
+        </a>
+
+        <div class="pt-6 pb-2 px-4 text-[10px] uppercase tracking-widest text-slate-600">Marketing & Leads</div>
+        
+        <a href="#" onclick="showSection('leads')" class="nav-link flex items-center gap-3 p-4 hover:bg-slate-800 rounded-xl transition">
+            <i class="fas fa-users-viewfinder"></i> Discovery Leads
+        </a>
+        
+        <a href="#" onclick="showSection('agents')" class="nav-link flex items-center gap-3 p-4 hover:bg-slate-800 rounded-xl transition">
+            <i class="fas fa-bullhorn"></i> Referral Agents
+        </a>
+        
+        <div class="pt-6 pb-2 px-4 text-[10px] uppercase tracking-widest text-slate-600">Commerce & Support</div>
+        
+        <a href="#" onclick="showSection('payments')" class="nav-link flex items-center gap-3 p-4 hover:bg-slate-800 rounded-xl transition">
+            <i class="fas fa-wallet"></i> Payments
+        </a>
+        
+        <a href="#" onclick="showSection('scholarships')" class="nav-link flex items-center gap-3 p-4 hover:bg-slate-800 rounded-xl transition">
+            <i class="fas fa-award"></i> Scholarships
+        </a>
+        
+        <a href="#" onclick="showSection('users')" class="nav-link flex items-center gap-3 p-4 hover:bg-slate-800 rounded-xl transition">
+            <i class="fas fa-user-shield"></i> User Management
+        </a>
+
+        <div class="pt-6 pb-2 px-4 text-[10px] uppercase tracking-widest text-red-900/60 font-black">System Security</div>
+<a href="#" onclick="showSection('maintenance')" class="nav-link flex items-center gap-3 p-4 hover:bg-red-900/10 text-red-400/80 rounded-xl transition">
+    <i class="fas fa-radiation"></i> Power Actions
+</a>
+    </nav>
+
+    <div class="p-6 border-t border-slate-800 bg-slate-900/50">
+        <button onclick="logout()" class="w-full p-4 bg-slate-800 hover:bg-red-900/20 hover:text-red-500 rounded-xl transition flex items-center justify-center gap-2 font-bold text-xs uppercase tracking-widest">
+            <i class="fas fa-power-off"></i> Logout
+        </button>
+    </div>
+</aside>
+
+    <main class="ml-64 flex-grow p-10">
+        <section id="section-stats" class="admin-section space-y-8">
+            <header>
+                <h1 class="text-3xl font-black text-slate-900">System Overview</h1>
+                <p class="text-slate-500 font-medium">Monitoring UniMatcher platform performance.</p>
+            </header>
+
+            <div class="grid grid-cols-5 gap-4">
+                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+                    <p class="text-[10px] font-black text-slate-400 uppercase mb-1">Total Revenue</p>
+                    <p id="total-revenue" class="text-2xl font-black text-brandBlue">GHS 0.00</p>
+                </div>
+                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+                    <p class="text-[10px] font-black text-slate-400 uppercase mb-1">Checks</p>
+                    <p id="count-checks" class="text-2xl font-black text-slate-900">0</p>
+                </div>
+                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+                    <p class="text-[10px] font-black text-slate-400 uppercase mb-1">Universities</p>
+                    <p id="count-unis" class="text-2xl font-black text-slate-900">0</p>
+                </div>
+                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+                    <p class="text-[10px] font-black text-slate-400 uppercase mb-1">Programs</p>
+                    <p id="count-programs" class="text-2xl font-black text-slate-900">0</p>
+                </div>
+                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+                    <p class="text-[10px] font-black text-slate-400 uppercase mb-1">Unread Inbox</p>
+                    <p id="count-inbox" class="text-2xl font-black text-brandOrange">0</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden">
+                <div class="p-8 border-b border-slate-50 flex justify-between items-center">
+                    <h3 class="font-black text-slate-900">Recent Transactions</h3>
+                    <button onclick="showSection('payments')" class="text-brandBlue text-xs font-bold hover:underline">View All</button>
+                </div>
+                <div id="recent-payments-list" class="p-6">
+                    <p class="text-center text-slate-400 italic py-10">Waiting for transaction data...</p>
+                </div>
+            </div>
+           <div class="mb-6 p-4 bg-white border border-slate-200 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div>
+        <h3 class="text-sm font-bold text-slate-800">Cleanup Range</h3>
+        <p class="text-[11px] text-slate-500">Select how much history you want to keep.</p>
+    </div>
+    
+    <div class="flex items-center gap-2">
+        <select id="cleanup-days" class="bg-slate-50 border border-slate-200 text-slate-700 text-xs rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="30">Older than 30 Days</option>
+            <option value="60">Older than 60 Days</option>
+            <option value="90">Older than 90 Days</option>
+            <option value="0" class="text-red-600 font-bold">WIPE ALL RECORDS (0 Days)</option>
+        </select>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="p-4 bg-slate-50 border border-slate-100 rounded-2xl flex flex-col justify-between">
+        <div>
+            <p class="text-[10px] font-black text-slate-400 uppercase mb-1">Pathfinder Leads</p>
+            <h4 class="text-sm font-bold text-slate-800 mb-4">Discovery Logs</h4>
+        </div>
+        <div class="flex gap-2">
+            <button onclick="downloadTable('consultancy_leads')" class="flex-1 py-2 bg-white border border-slate-200 text-slate-600 text-[10px] font-bold rounded-lg hover:bg-slate-100 transition">
+                <i class="fas fa-download mr-1"></i> BACKUP
+            </button>
+            <button onclick="runBulkDelete('consultancy_leads', event)" class="flex-1 py-2 bg-red-50 text-red-500 text-[10px] font-bold rounded-lg hover:bg-red-500 hover:text-white transition">
+                <i class="fas fa-trash-alt mr-1"></i> WIPE
+            </button>
+        </div>
+    </div>
+
+    <div class="p-4 bg-slate-50 border border-slate-100 rounded-2xl flex flex-col justify-between">
+        <div>
+            <p class="text-[10px] font-black text-slate-400 uppercase mb-1">Transaction History</p>
+            <h4 class="text-sm font-bold text-slate-800 mb-4">Financial Logs</h4>
+        </div>
+        <div class="flex gap-2">
+            <button onclick="downloadTable('payments')" class="flex-1 py-2 bg-white border border-slate-200 text-slate-600 text-[10px] font-bold rounded-lg hover:bg-slate-100 transition">
+                <i class="fas fa-download mr-1"></i> BACKUP
+            </button>
+            <button onclick="runBulkDelete('payments', event)" class="flex-1 py-2 bg-red-50 text-red-500 text-[10px] font-bold rounded-lg hover:bg-red-500 hover:text-white transition">
+                <i class="fas fa-trash-alt mr-1"></i> WIPE
+            </button>
+        </div>
+    </div>
+
+    <div class="p-4 bg-slate-50 border border-slate-100 rounded-2xl flex flex-col justify-between">
+        <div>
+            <p class="text-[10px] font-black text-slate-400 uppercase mb-1">Eligibility Engine</p>
+            <h4 class="text-sm font-bold text-slate-800 mb-4">Check Logs</h4>
+        </div>
+        <div class="flex gap-2">
+            <button onclick="downloadTable('eligibility_checks')" class="flex-1 py-2 bg-white border border-slate-200 text-slate-600 text-[10px] font-bold rounded-lg hover:bg-slate-100 transition">
+                <i class="fas fa-download mr-1"></i> BACKUP
+            </button>
+            <button onclick="runBulkDelete('eligibility_checks', event)" class="flex-1 py-2 bg-red-50 text-red-500 text-[10px] font-bold rounded-lg hover:bg-red-500 hover:text-white transition">
+                <i class="fas fa-trash-alt mr-1"></i> WIPE
+            </button>
+        </div>
+    </div>
+</div>
+        </section>
+
+        <section id="section-academic-data" class="admin-section hidden space-y-6">
+            <header class="flex justify-between items-end">
+                <div>
+                    <h1 class="text-3xl font-black text-slate-900">Academic Data</h1>
+                    <p class="text-slate-500 font-medium">Manage Universities, Programs, and Rules.</p>
+                </div>
+                <button onclick="openModal()" class="px-6 py-3 bg-brandBlue text-white font-bold rounded-xl shadow-lg hover:scale-105 transition">
+                    <i class="fas fa-file-import mr-2"></i> Bulk Import
+                </button>
+            </header>
+            <div class="flex gap-2 p-1 bg-slate-100 rounded-2xl w-fit">
+                <button onclick="setTable('universities')" class="tab-btn px-6 py-2 rounded-xl font-bold text-sm bg-white shadow-sm text-brandBlue">Universities</button>
+                <button onclick="setTable('programs')" class="tab-btn px-6 py-2 rounded-xl font-bold text-sm text-slate-500">Programs</button>
+                <button onclick="setTable('core_requirements')" class="tab-btn px-6 py-2 rounded-xl font-bold text-sm text-slate-500">Core Rules</button>
+                <button onclick="setTable('elective_requirements')" class="tab-btn px-6 py-2 rounded-xl font-bold text-sm text-slate-500">Elective Rules</button>
+            </div>
+            <div class="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden min-h-[400px]">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-50 border-b border-slate-100">
+                        <tr id="table-headers" class="text-[10px] font-black text-slate-400 uppercase tracking-widest"></tr>
+                    </thead>
+                    <tbody id="table-body" class="text-sm font-medium text-slate-600"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="section-grades" class="admin-section hidden space-y-6">
+            <header class="flex justify-between items-end">
+                <h1 class="text-3xl font-black text-slate-900">Grade Mapping</h1>
+                <button onclick="currentTable='grade_mapping'; openModal();" class="px-6 py-3 bg-brandBlue text-white font-bold rounded-xl">Add Grade Rule</button>
+            </header>
+            <div class="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-50 border-b border-slate-100">
+                        <tr class="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                            <th class="px-8 py-4">Exam Type</th><th class="px-8 py-4">Grade</th><th class="px-8 py-4">Points</th><th class="px-8 py-4 text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="grade-table-body" class="text-sm font-medium text-slate-600"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="section-payments" class="admin-section hidden space-y-6">
+            <header><h1 class="text-3xl font-black text-slate-900">Payment Logs</h1></header>
+            <div class="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-50 border-b border-slate-100">
+                        <tr class="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                            <th class="px-8 py-4">ID</th><th class="px-8 py-4">Amount</th><th class="px-8 py-4">Check ID</th><th class="px-8 py-4">Status</th><th class="px-8 py-4">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="payment-table-body" class="text-sm font-medium text-slate-600"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="section-scholarships" class="admin-section hidden space-y-6">
+            <header class="flex justify-between items-end">
+                <div>
+                    <h1 class="text-3xl font-black text-slate-900">Scholarships</h1>
+                    <p class="text-slate-500 font-medium">Manage available funding opportunities.</p>
+                </div>
+                <button onclick="openScholarshipModal()" class="px-6 py-3 bg-brandOrange text-white font-bold rounded-xl shadow-lg">Add New</button>
+            </header>
+            <div class="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-50 border-b border-slate-100">
+                        <tr class="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                            <th class="px-8 py-4">Name</th><th class="px-8 py-4">Provider</th><th class="px-8 py-4 text-center">Min Agg</th><th class="px-8 py-4">Amount</th><th class="px-8 py-4 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scholarship-table-body" class="text-sm font-medium text-slate-600"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="section-db-explorer" class="admin-section hidden space-y-6">
+    <header>
+        <h1 class="text-3xl font-black text-slate-900">Database Explorer</h1>
+        <p class="text-slate-500 font-medium">Search, Edit, and Delete individual records across all tables.</p>
+    </header>
+
+    <div class="flex flex-col md:flex-row gap-4 bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100">
+        <div class="w-full md:w-64">
+            <label class="text-[10px] font-black text-slate-400 uppercase ml-2">Select Target Table</label>
+            <select id="explorer-table-select" onchange="loadExplorerData(this.value)" 
+                class="w-full mt-1 p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-brandBlue outline-none">
+                <option value="universities">Universities</option>
+                <option value="programs">Programs</option>
+                <option value="core_requirements">Core Requirements</option>
+                <option value="elective_requirements">Elective Requirements</option>
+                <option value="scholarships">Scholarships</option>
+            </select>
+        </div>
+        
+        <div class="flex-grow">
+            <label class="text-[10px] font-black text-slate-400 uppercase ml-2">Search Records</label>
+            <div class="relative mt-1">
+                <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-300"></i>
+                <input type="text" id="explorer-search" oninput="filterExplorer()" placeholder="Search by name, ID, or any value..." 
+                    class="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-brandBlue font-bold text-slate-600">
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-[2rem] border border-slate-100 shadow-xl overflow-hidden">
+        <div class="overflow-x-auto custom-scroll">
+            <table class="w-full text-left border-collapse">
+                <thead id="explorer-head" class="bg-slate-900 text-white">
+                    </thead>
+                <tbody id="explorer-body" class="divide-y divide-slate-50 text-sm font-medium text-slate-600">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<div id="edit-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[150] hidden flex items-center justify-center p-6">
+    <div class="bg-white w-full max-w-xl rounded-[2.5rem] p-10 shadow-2xl relative">
+        <button onclick="closeEditModal()" class="absolute top-8 right-8 text-slate-400"><i class="fas fa-times text-xl"></i></button>
+        <h2 class="text-2xl font-black text-slate-900 mb-2">Edit Record</h2>
+        <p id="edit-meta" class="text-[10px] font-black text-brandOrange uppercase mb-6"></p>
+        <form id="edit-form" class="space-y-4">
+            <div id="edit-inputs" class="grid grid-cols-1 gap-4">
+                </div>
+            <button type="submit" class="w-full mt-6 py-4 bg-brandBlue text-white font-black rounded-2xl shadow-lg hover:bg-blue-800 transition">Update Record</button>
+        </form>
+    </div>
+</div>
+        <section id="section-users" class="admin-section hidden space-y-6">
+    <header>
+        <h1 class="text-3xl font-black text-slate-900">User Directory</h1>
+        <p class="text-slate-500 font-medium">Manage student accounts, roles, and access status.</p>
+        <button onclick="exportUsersToCSV()" class="px-6 py-3 bg-emerald-500 text-white font-bold rounded-xl shadow-lg hover:bg-emerald-600 hover:scale-105 transition flex items-center gap-2">
+            <i class="fas fa-file-csv"></i> Export for SMS
+        </button>
+    </header>
+
+    <div class="bg-white rounded-[2rem] border border-slate-100 shadow-xl overflow-x-auto">
+    <table class="w-full text-left border-collapse min-w-[800px]">
+        <thead class="bg-slate-50/80 border-b border-slate-100 sticky top-0 z-10 backdrop-blur-sm">
+            <tr class="text-[11px] font-black text-slate-500 uppercase tracking-widest">
+                <th class="px-8 py-5">User Info</th>
+                <th class="px-8 py-5">Contact</th>
+                <th class="px-8 py-5">Academic & Target</th>
+                <th class="px-8 py-5 text-center">Role</th>
+                <th class="px-8 py-5 text-center">Status</th>
+                <th class="px-8 py-5 text-right">Actions</th>
+            </tr>
+        </thead>
+        <tbody id="user-table-body" class="text-sm font-medium text-slate-600 divide-y divide-slate-50">
+            </tbody>
+    </table>
+</div>
+</section>
+
+        <section id="section-inbox" class="admin-section hidden space-y-6">
+            <header><h1 class="text-3xl font-black text-slate-900">Contact Inbox</h1></header>
+            <div id="inbox-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        </section>
+        <section id="section-leads" class="admin-section hidden space-y-6">
+    <header>
+        <h1 class="text-3xl font-black text-slate-900">Pathfinder Leads</h1>
+        <p class="text-slate-500 font-medium">Students who used the AI Faculty Discovery tool.</p>
+    </header>
+    <div class="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden">
+        <table class="w-full text-left border-collapse">
+            <thead class="bg-slate-50 border-b border-slate-100">
+                <tr class="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                    <th class="px-8 py-4">Student</th>
+                    <th class="px-8 py-4">Faculty</th>
+                    <th class="px-8 py-4 text-center">Agg</th>
+                    <th class="px-8 py-4">Status</th>
+                    <th class="px-8 py-4 text-right">Contact</th>
+                </tr>
+            </thead>
+            <tbody id="leads-table-body" class="text-sm font-medium text-slate-600"></tbody>
+        </table>
+    </div>
+</section>
+
+<section id="section-maintenance" class="admin-section hidden space-y-8">
+    <header>
+        <h1 class="text-3xl font-black text-slate-900 tracking-tight">Power Actions</h1>
+        <p class="text-slate-500 font-medium text-sm">Targeted data clearing and system maintenance.</p>
+    </header>
+
+    <div class="max-w-2xl bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-xl space-y-6">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center">
+                <i class="fas fa-eraser text-xl"></i>
+            </div>
+            <div>
+                <h3 class="font-black text-slate-900 text-lg">University Maintenance</h3>
+                <p class="text-[10px] text-slate-400 uppercase font-black tracking-widest">Surgical Data Wipe Tool</p>
+            </div>
+        </div>
+
+        <div class="space-y-2">
+            <label class="text-[10px] font-black text-slate-400 uppercase ml-2">1. Select University to Manage</label>
+            <select id="wipe-university-select" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl font-bold text-slate-700 outline-none focus:border-red-500 transition-all">
+                </select>
+        </div>
+
+        <button onclick="openWipeModal()" class="w-full py-5 bg-red-600 text-white font-black rounded-2xl shadow-lg hover:bg-red-700 transition-all uppercase tracking-widest text-sm shadow-red-500/20">
+            Open Wipe Console
+        </button>
+    </div>
+</section>
+<section id="section-agents" class="admin-section hidden space-y-8">
+    <header class="flex justify-between items-end">
+        <div>
+            <h1 class="text-3xl font-black text-slate-900">Referral Agents</h1>
+            <p class="text-slate-500 font-medium">Manage influencer partnerships and track campaign ROI.</p>
+        </div>
+        <button id="back-to-agents" onclick="showAgentList()" class="hidden px-6 py-2 bg-slate-100 text-slate-600 font-bold rounded-xl hover:bg-slate-200 transition flex items-center gap-2">
+            <i class="fas fa-arrow-left"></i> Back to Leaderboard
+        </button>
+    </header>
+
+    <div id="agent-stats-grid" class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+            <p class="text-[10px] font-black text-slate-400 uppercase mb-1">Total Clicks</p>
+            <h2 id="agent-total-clicks" class="text-3xl font-black text-brandBlue">0</h2>
+        </div>
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+            <p class="text-[10px] font-black text-slate-400 uppercase mb-1">Total Signups</p>
+            <h2 id="agent-total-signups" class="text-3xl font-black text-brandOrange">0</h2>
+        </div>
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+            <p class="text-[10px] font-black text-slate-400 uppercase mb-1">Total App Checks</p>
+            <h2 id="agent-total-checks-run" class="text-3xl font-black text-emerald-600">0</h2>
+        </div>
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+            <p class="text-[10px] font-black text-slate-400 uppercase mb-1">Avg. Conv. Rate</p>
+            <h2 id="agent-conv-rate" class="text-3xl font-black text-slate-900">0%</h2>
+        </div>
+    </div>
+
+    <div id="main-agent-view" class="space-y-8">
+        <div class="bg-white rounded-[2rem] border border-slate-100 shadow-sm p-10 max-w-2xl">
+    <h3 class="font-black text-slate-900 mb-6">Create New Agent & Share</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="md:col-span-2">
+            <label class="text-[10px] font-black text-slate-400 uppercase ml-2">Agent Name</label>
+            <input type="text" id="agentName" placeholder="e.g. Stonebwoy" class="w-full px-5 py-3 bg-slate-50 rounded-2xl border border-slate-100 outline-none focus:border-brandOrange transition">
+        </div>
+        
+        <div class="md:col-span-2">
+            <label class="text-[10px] font-black text-slate-400 uppercase ml-2">WhatsApp Number (with Country Code)</label>
+            <input type="tel" id="agentPhone" placeholder="e.g. 233240000000" class="w-full px-5 py-3 bg-slate-50 rounded-2xl border border-slate-100 outline-none focus:border-brandOrange transition">
+            <p class="text-[9px] text-slate-400 mt-1 ml-2">* No "+" or spaces. Example: 233501234567</p>
+        </div>
+
+        <div>
+            <label class="text-[10px] font-black text-slate-400 uppercase ml-2">Referral Code</label>
+            <input type="text" id="agentCode" placeholder="SB01" class="w-full px-5 py-3 bg-slate-50 rounded-2xl border border-slate-100 outline-none focus:border-brandOrange transition">
+        </div>
+        <div>
+            <label class="text-[10px] font-black text-slate-400 uppercase ml-2">Commission %</label>
+            <input type="number" id="agentCommission" value="10" class="w-full px-5 py-3 bg-slate-50 rounded-2xl border border-slate-100 outline-none focus:border-brandOrange transition">
+        </div>
+
+        <button onclick="generateAgent(event)" class="md:col-span-2 mt-4 py-4 bg-brandBlue text-white font-black rounded-2xl shadow-lg flex items-center justify-center gap-2 hover:bg-blue-800 transition">
+    <i class="fab fa-whatsapp text-xl"></i> Create & Send via WhatsApp
+</button>
+    </div>
+</div>
+        <div class="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden">
+    <div class="p-8 border-b border-slate-50 bg-slate-50/30">
+        <h3 class="font-black text-slate-900">Master Leaderboard</h3>
+    </div>
+    <table class="w-full text-left border-collapse">
+        <thead class="bg-slate-50 border-b border-slate-100">
+            <tr class="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                <th class="px-8 py-4">Influencer</th>
+                <th class="px-8 py-4">Ref Code</th> <th class="px-8 py-4 text-center">Clicks</th>
+                <th class="px-8 py-4 text-center">Signups</th>
+                <th class="px-8 py-4 text-center">Checks</th>
+                <th class="px-8 py-4 text-center text-brandBlue">Rate (%)</th> <th class="px-8 py-4 text-right">Actions</th>
+            </tr>
+        </thead>
+        <tbody id="agent-table-body" class="text-sm font-medium text-slate-600"></tbody>
+    </table>
+</div>
+    </div>
+
+    <div id="agent-drilldown-view" class="hidden animate-in fade-in slide-in-from-bottom-4 duration-500 mt-10">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Agent Revenue Share</p>
+            <div class="flex items-baseline gap-2">
+                <span id="drilldown-total-revenue" class="text-2xl font-black text-brandBlue">GHS 0.00</span>
+                <span class="text-[10px] font-bold text-green-500 bg-green-50 px-2 py-0.5 rounded-full">Ready for Cashout</span>
+            </div>
+        </div>
+        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Conversion Rate</p>
+            <span id="drilldown-conversion" class="text-2xl font-black text-slate-700">0%</span>
+        </div>
+        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Verified Checks</p>
+            <span id="drilldown-total-checks" class="text-2xl font-black text-slate-700">0</span>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-[2.5rem] border border-slate-100 shadow-xl overflow-hidden">
+        <div class="p-8 border-b border-slate-50 bg-slate-900 text-white flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+                <h3 id="drilldown-title" class="text-xl font-black italic uppercase tracking-tight">Financial Audit Trail</h3>
+                <p id="drilldown-subtitle" class="text-slate-400 text-xs font-bold uppercase tracking-widest mt-1">Detailed breakdown per student asset</p>
+            </div>
+            <button onclick="printAgentReport()" class="px-6 py-3 bg-brandOrange hover:bg-orange-600 rounded-2xl text-white font-black transition flex items-center gap-3 text-xs shadow-lg shadow-orange-500/20 uppercase tracking-widest">
+                <i class="fas fa-file-invoice-dollar"></i> Generate Payout Report
+            </button>
+        </div>
+        
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead class="bg-slate-50 border-b border-slate-100">
+                    <tr class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">
+                        <th class="px-10 py-5">Student Identity</th>
+                        <th class="px-10 py-5">Activity Status</th>
+                        <th class="px-10 py-5 text-center">Checks Run</th>
+                        <th class="px-10 py-5 text-right">Commission (GHS)</th>
+                        <th class="px-10 py-5 text-right">Acquisition Date</th>
+                    </tr>
+                </thead>
+                <tbody id="drilldown-table-body" class="text-sm divide-y divide-slate-50">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</section>
+    </main>
+
+    <div id="import-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-6">
+        <div class="bg-white w-full max-w-2xl rounded-[2.5rem] p-10 shadow-2xl relative">
+            <button onclick="closeModal()" class="absolute top-8 right-8 text-slate-400"><i class="fas fa-times text-xl"></i></button>
+            <h2 class="text-2xl font-black text-slate-900 mb-2">Bulk Import</h2>
+            <p class="text-slate-500 text-sm mb-6 uppercase tracking-widest">Target: <span id="target-table-name" class="font-bold text-brandOrange">universities</span></p>
+            <textarea id="csv-input" rows="10" class="w-full p-6 bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200 outline-none font-mono text-xs" placeholder="Paste CSV data (headers must match SQL columns)..."></textarea>
+            <button onclick="processBulkImport()" id="import-btn" class="w-full mt-4 py-4 bg-brandBlue text-white font-black rounded-2xl shadow-lg">Start Processing</button>
+        </div>
+    </div>
+
+    <div id="scholarship-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[110] hidden flex items-center justify-center p-6">
+        <div class="bg-white w-full max-w-xl rounded-[2.5rem] p-10 shadow-2xl relative">
+            <button onclick="closeScholarshipModal()" class="absolute top-8 right-8 text-slate-400"><i class="fas fa-times text-xl"></i></button>
+            <h2 class="text-2xl font-black text-slate-900 mb-6">Add New Scholarship</h2>
+            <form id="scholarship-form" class="space-y-4" onsubmit="handleScholarshipSubmit(event)">
+                <input type="text" name="name" placeholder="Scholarship Name" required class="w-full px-5 py-3 bg-slate-50 rounded-2xl border border-slate-100 outline-none focus:border-brandOrange">
+                <input type="text" name="provider" placeholder="Provider (e.g. GETFund)" required class="w-full px-5 py-3 bg-slate-50 rounded-2xl border border-slate-100 outline-none focus:border-brandOrange">
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="text" name="amount" placeholder="Amount (e.g. GHS 10k)" class="w-full px-5 py-3 bg-slate-50 rounded-2xl border border-slate-100 outline-none">
+                    <input type="text" name="country_restriction" placeholder="Country (e.g. Ghana)" class="w-full px-5 py-3 bg-slate-50 rounded-2xl border border-slate-100 outline-none">
+                    <input type="number" name="min_aggregate" placeholder="Min Agg (e.g. 15)" required class="w-full px-5 py-3 bg-slate-50 rounded-2xl border border-slate-100 outline-none">
+                </div>
+                <input type="text" name="link" placeholder="Application Link (https://...)" class="w-full px-5 py-3 bg-slate-50 rounded-2xl border border-slate-100 outline-none">
+                <input type="date" name="deadline" class="w-full px-5 py-3 bg-slate-50 rounded-2xl border border-slate-100 outline-none">
+                <button type="submit" class="w-full mt-4 py-4 bg-brandOrange text-white font-black rounded-2xl shadow-lg hover:scale-[1.02] transition">Save Scholarship</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="wipe-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-[200] hidden flex items-center justify-center p-6">
+    <div class="bg-white w-full max-w-xl rounded-[2.5rem] p-10 shadow-2xl relative border-4 border-red-50">
+        <button onclick="closeWipeModal()" class="absolute top-8 right-8 text-slate-400 hover:text-slate-600">
+            <i class="fas fa-times text-xl"></i>
+        </button>
+
+        <div class="text-center space-y-4 mb-8">
+            <div class="w-16 h-16 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center mx-auto">
+                <i class="fas fa-exclamation-triangle text-2xl animate-pulse"></i>
+            </div>
+            <h2 class="text-2xl font-black text-slate-900">Data Wipe Console</h2>
+            <p id="wipe-target-display" class="text-brandBlue font-black uppercase text-xs tracking-widest bg-blue-50 py-2 rounded-xl"></p>
+        </div>
+
+        <div class="space-y-6">
+            <div class="space-y-3">
+                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Select Data to Clear</label>
+                <div class="grid grid-cols-1 gap-2">
+                    <label class="flex items-center justify-between p-4 bg-slate-50 rounded-2xl cursor-pointer hover:bg-slate-100 transition">
+                        <span class="text-sm font-bold text-slate-700">Wipe Core Requirements</span>
+                        <input type="checkbox" id="check-wipe-cores" class="w-5 h-5 accent-red-500">
+                    </label>
+                    <label class="flex items-center justify-between p-4 bg-slate-50 rounded-2xl cursor-pointer hover:bg-slate-100 transition">
+                        <span class="text-sm font-bold text-slate-700">Wipe Elective Requirements</span>
+                        <input type="checkbox" id="check-wipe-electives" class="w-5 h-5 accent-red-500">
+                    </label>
+                    <label class="flex items-center justify-between p-4 bg-red-50/40 rounded-2xl cursor-pointer hover:bg-red-50 transition">
+                        <span class="text-sm font-bold text-red-600 uppercase">Wipe All Programs</span>
+                        <input type="checkbox" id="check-wipe-programs" class="w-5 h-5 accent-red-600">
+                    </label>
+                </div>
+            </div>
+
+            <div class="space-y-2 pt-4 border-t border-slate-100">
+                <label id="verification-label" class="text-[10px] font-black text-red-500 uppercase tracking-widest ml-2"></label>
+                <input type="text" id="wipe-verification-input" placeholder="Confirm ID..." 
+                    class="w-full px-6 py-4 bg-red-50 border-2 border-red-100 rounded-2xl outline-none focus:border-red-500 font-black text-red-600 text-center tracking-widest uppercase">
+            </div>
+
+            <button onclick="executeTargetedWipe()" id="final-wipe-btn" class="w-full py-5 bg-red-600 text-white font-black rounded-3xl shadow-xl shadow-red-900/30 uppercase tracking-widest text-sm">
+                Execute Targeted Wipe
+            </button>
+        </div>
+    </div>
+</div>
+
+    <script>
+    let currentTable = 'universities';
+    // Change this line at the top of your script
+const API_BASE = 'https://api.unimatcher-skynetconsult.com/api/admin';
+
+    function showSection(id) {
+    // 1. Hide all sections
+    document.querySelectorAll('.admin-section').forEach(s => s.classList.add('hidden'));
+    
+    // 2. Show the selected section
+    const targetSection = document.getElementById(`section-${id}`);
+    if (targetSection) targetSection.classList.remove('hidden');
+    
+    // 3. Reset all nav links to "Inactive" state
+    document.querySelectorAll('.nav-link').forEach(l => {
+        l.classList.remove('bg-brandBlue', 'text-white');
+        l.classList.add('hover:bg-slate-800', 'text-slate-400');
+    });
+
+    // 4. Highlight the clicked nav link (Premium visual feedback)
+    const activeLink = document.querySelector(`[onclick="showSection('${id}')"]`);
+    if (activeLink) {
+        activeLink.classList.add('bg-brandBlue', 'text-white');
+        activeLink.classList.remove('hover:bg-slate-800', 'text-slate-400');
+    }
+
+    // 5. Trigger the specific loader
+    if(id === 'academic-data') loadTableData();
+    if(id === 'grades') { currentTable = 'grade_mapping'; loadGrades(); }
+    if(id === 'inbox') loadInbox();
+    if(id === 'payments') loadPayments();
+    if(id === 'stats') loadOverview();
+    if(id === 'scholarships') { currentTable = 'scholarships'; loadScholarships(); }
+    if(id === 'leads') loadLeads();
+    if(id === 'users') loadUsers();
+    // Check your showSection function
+if(id === 'agents') { 
+    currentTable = 'referral_agents'; 
+    loadTableData(); 
+    if(id === 'agents') loadAgentStats();
+}
+// --- ADD THESE TWO NEW LINES ---
+    if(id === 'db-explorer') loadExplorerData('universities'); // Starts with unis by default
+    if(id === 'maintenance') loadWipeDropdown(); // Fills the school selector for the wipe tool
+}
+
+    function setTable(table) {
+        currentTable = table;
+        document.getElementById('target-table-name').innerText = table;
+        document.querySelectorAll('.tab-btn').forEach(b => {
+            b.classList.remove('bg-white', 'shadow-sm', 'text-brandBlue');
+            b.classList.add('text-slate-500');
+        });
+        if(event && event.target.classList.contains('tab-btn')) {
+            event.target.classList.add('bg-white', 'shadow-sm', 'text-brandBlue');
+        }
+        loadTableData();
+    }
+
+    async function loadTableData() {
+        const tableHead = document.getElementById('table-headers');
+        const tableBody = document.getElementById('table-body');
+        if(!tableBody) return;
+        
+        tableBody.innerHTML = '<tr><td colspan="10" class="p-20 text-center italic">Loading...</td></tr>';
+
+       // Locate this inside loadTableData()
+const schema = {
+    universities: ['university_id', 'university_name', 'country', 'campus'], 
+    programs: ['program_id', 'university_id', 'program_name', 'campus', 'faculty', 'cutoff_aggregate', 'min_total_passes', 'min_elective_passes'],
+    core_requirements: ['program_id', 'core_subject', 'min_grade', 'is_priority'],
+    elective_requirements: ['program_id', 'rule_type', 'subject', 'min_grade', 'required_count'],
+    referral_agents: ['id', 'name', 'code', 'clicks', 'signups', 'status', 'commission_rate']
+};
+
+        if(tableHead && schema[currentTable]) {
+            tableHead.innerHTML = schema[currentTable].map(h => `<th class="px-8 py-4">${h.replace(/_/g, ' ')}</th>`).join('') + `<th class="px-8 py-4 text-right">Actions</th>`;
+        }
+
+        try {
+            const res = await fetch(`${API_BASE}/get-table?table=${currentTable}`);
+            const rows = await res.json();
+            tableBody.innerHTML = rows.map(row => `
+    <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+        ${schema[currentTable].map(h => {
+            let cellData = row[h] || '-';
+            // If the column is 'campus', wrap it in a nice badge
+            if (h === 'campus' && cellData !== '-') {
+                return `<td class="px-8 py-4"><span class="px-2 py-1 bg-slate-100 text-slate-600 rounded-md text-[10px] font-bold uppercase">${cellData}</span></td>`;
+            }
+            return `<td class="px-8 py-4">${cellData}</td>`;
+        }).join('')}
+        <td class="px-8 py-4 text-right">
+            <button onclick="deleteRow('${currentTable}', '${row.id || row.program_id || row.university_id}')" class="text-slate-300 hover:text-red-500 transition">
+                <i class="fas fa-trash"></i>
+            </button>
+        </td>
+    </tr>
+`).join('');
+        } catch (e) { tableBody.innerHTML = 'Error loading data.'; }
+    }
+
+   async function processBulkImport() {
+    const importBtn = document.getElementById('import-btn');
+    const inputArea = document.getElementById('csv-input');
+    const raw = inputArea.value.trim();
+    
+    if (!raw) return;
+    importBtn.innerText = "Processing...";
+    importBtn.disabled = true;
+
+    try {
+        // 1. Split text into lines
+        const lines = raw.split('\n');
+        
+        // 2. Detect delimiter (comma for CSV, or tab for Excel copy-paste)
+        const delimiter = lines[0].includes('\t') ? '\t' : ',';
+        
+        // 3. Clean and map headers
+        const headers = lines[0].split(delimiter).map(h => h.trim());
+
+        // 4. Map the data rows
+        const data = lines.slice(1).map(line => {
+            const values = line.split(delimiter).map(v => v.trim());
+            let obj = {};
+            
+            headers.forEach((h, i) => {
+                const val = values[i];
+                // Numeric fields that need to be actual integers for the matching engine
+                const numFields = ['cutoff_aggregate', 'min_total_passes', 'min_elective_passes', 'required_count', 'points', 'min_aggregate'];
+                
+                if (numFields.includes(h)) {
+                    obj[h] = val ? parseInt(val) : 0;
+                } else {
+                    obj[h] = val || ""; // Strings like campus, names, and IDs
+                }
+            });
+            return obj;
+        });
+
+        // 5. Send to Worker
+        const res = await fetch(`${API_BASE}/bulk-import`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ table: currentTable, data })
+        });
+
+        const result = await res.json();
+
+        if (res.ok) { 
+            alert("Success: " + (data.length) + " records imported!"); 
+            closeModal(); 
+            loadTableData(); 
+            inputArea.value = ""; // Clear the box
+        } else { 
+            alert("Import failed: " + (result.details || result.error)); 
+        }
+    } catch (e) { 
+        alert("Processing Error: " + e.message); 
+    } finally { 
+        importBtn.innerText = "Start Processing"; 
+        importBtn.disabled = false; 
+    }
+}
+
+    async function loadScholarships() {
+        const body = document.getElementById('scholarship-table-body');
+        try {
+            const res = await fetch(`${API_BASE}/get-table?table=scholarships`);
+            const data = await res.json();
+            body.innerHTML = data.map(s => `
+                <tr class="border-b border-slate-50 hover:bg-slate-50">
+                    <td class="px-8 py-4 font-bold text-slate-900">${s.name}</td>
+                    <td class="px-8 py-4 text-slate-500">${s.provider}</td>
+                    <td class="px-8 py-4 text-center font-black text-brandBlue">${s.min_aggregate}</td>
+                    <td class="px-8 py-4 font-bold text-emerald-600">${s.amount || 'N/A'}</td>
+                    <td class="px-8 py-4 text-right">
+                         <button onclick="deleteRow('scholarships', ${s.id})" class="text-slate-300 hover:text-red-500"><i class="fas fa-trash-can"></i></button>
+                    </td>
+                </tr>`).join('');
+        } catch (e) { body.innerHTML = 'Error.'; }
+    }
+
+    async function loadPayments(isMini = false) {
+    const target = isMini ? document.getElementById('recent-payments-list') : document.getElementById('payment-table-body');
+    if (!target) return;
+
+    try {
+        const res = await fetch(`${API_BASE}/get-table?table=payments`);
+        const data = await res.json();
+        
+        // If data is empty, show a message instead of a blank screen
+        if (!data || data.length === 0) {
+            target.innerHTML = isMini ? '<p class="text-xs p-4">No payments yet</p>' : '<tr><td colspan="5" class="p-10 text-center">No payments found in database.</td></tr>';
+            return;
+        }
+
+        target.innerHTML = data.map(p => {
+            // SAFE DATA CHECKING:
+            // 1. Ensure amount is a number so .toFixed(2) doesn't crash
+            const amt = p.amount ? Number(p.amount).toFixed(2) : "0.00";
+            
+            // 2. Ensure date is valid
+            const dateStr = p.created_at ? new Date(p.created_at).toLocaleString() : "N/A";
+
+            if(isMini) {
+                return `
+                    <div class="flex justify-between items-center p-4 hover:bg-slate-50 transition rounded-2xl">
+                        <div class="flex items-center gap-3">
+                             <div class="w-8 h-8 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-600"><i class="fas fa-check text-[10px]"></i></div>
+                             <p class="text-xs font-bold text-slate-700">#${p.check_id || 'REF'}</p>
+                        </div>
+                        <p class="font-black text-brandBlue text-sm">GHS ${amt}</p>
+                    </div>`;
+            } else {
+                return `
+                    <tr class="border-b border-slate-50">
+                        <td class="px-8 py-4 font-mono text-xs">#${p.id}</td>
+                        <td class="px-8 py-4 font-black text-brandBlue">GHS ${amt}</td>
+                        <td class="px-8 py-4 font-bold text-slate-500">${p.check_id || 'No Ref'}</td>
+                        <td class="px-8 py-4"><span class="px-3 py-1 bg-emerald-50 text-emerald-600 rounded-full text-[10px] font-black uppercase">${p.status || 'Success'}</span></td>
+                        <td class="px-8 py-4 text-slate-400 text-xs">${dateStr}</td>
+                    </tr>`;
+            }
+        }).join('');
+    } catch (e) {
+        console.error("Payment load error:", e);
+        target.innerHTML = '<p class="p-4 text-red-500">Failed to load payments.</p>';
+    }
+}
+
+    async function deleteRow(table, id) {
+    if (!confirm(`Are you sure you want to permanently remove this item from ${table}?`)) return;
+
+    try {
+        const res = await fetch(`${API_BASE}/delete-record?table=${table}&id=${id}`, { 
+            method: 'DELETE' 
+        });
+
+        const result = await res.json();
+
+        if (res.ok) {
+            const reloadActions = {
+                'contacts': loadInbox,
+                'scholarships': loadScholarships,
+                'grade_mapping': loadGrades,
+                'programs': loadTableData,
+                'universities': loadTableData,
+                // ADD THIS LINE BELOW:
+                'consultancy_leads': loadLeads,
+                'users_auth': loadUsers 
+            };
+
+            const action = reloadActions[table] || loadTableData;
+            action();
+            
+            loadOverview(); // Refreshes the top counters
+            
+        } else {
+            alert(`Error: ${result.error || 'Could not delete record'}`);
+        }
+    } catch (e) {
+        console.error("Delete Error:", e);
+        alert('Connection failed.');
+    }
+}
+
+    async function handleScholarshipSubmit(e) {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData.entries());
+        try {
+            const res = await fetch(`${API_BASE}/add-scholarship`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            if(res.ok) {
+                alert("Scholarship Saved!");
+                e.target.reset();
+                closeScholarshipModal();
+                loadScholarships();
+            }
+        } catch (e) { alert("Save failed."); }
+    }
+
+    async function loadOverview() {
+        try {
+            const res = await fetch(`${API_BASE}/overview`);
+            const data = await res.json();
+            document.getElementById('total-revenue').innerText = `GHS ${(data.revenue || 0).toFixed(2)}`;
+            document.getElementById('count-checks').innerText = data.checks || 0;
+            document.getElementById('count-unis').innerText = data.universities || 0;
+            document.getElementById('count-programs').innerText = data.programs || 0;
+            document.getElementById('count-inbox').innerText = data.inbox || 0;
+            loadPayments(true);
+        } catch (e) { }
+    }
+
+    async function loadGrades() {
+        const body = document.getElementById('grade-table-body');
+        try {
+            const res = await fetch(`${API_BASE}/get-table?table=grade_mapping`);
+            const data = await res.json();
+            body.innerHTML = data.map(g => `<tr class="border-b border-slate-50"><td class="px-8 py-4 font-bold">${g.exam_type}</td><td class="px-8 py-4">${g.grade}</td><td class="px-8 py-4">${g.points}</td><td class="px-8 py-4 text-right"><button onclick="deleteRow('grade_mapping', ${g.id})" class="text-slate-300 hover:text-red-500"><i class="fas fa-trash"></i></button></td></tr>`).join('');
+        } catch (e) { body.innerHTML = 'Error.'; }
+    }
+
+    async function loadInbox() {
+        const container = document.getElementById('inbox-container');
+        try {
+            const res = await fetch(`${API_BASE}/get-table?table=contacts`);
+            const data = await res.json();
+            container.innerHTML = data.map(m => `
+                <div class="bg-white p-6 rounded-[2rem] border ${m.status === 'unread' ? 'border-brandOrange/20' : 'border-slate-100'} shadow-sm">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="font-black text-slate-900">${m.subject}</h3>
+                        <button onclick="deleteRow('contacts', ${m.id})" class="text-slate-200 hover:text-red-500"><i class="fas fa-trash"></i></button>
+                    </div>
+                    <p class="text-slate-600 text-sm mb-6">${m.message}</p>
+                    <div class="text-[10px] text-slate-400 font-bold">${m.name} (${m.email})</div>
+                </div>`).join('');
+        } catch (e) { }
+    }
+
+    async function loadLeads() {
+    const body = document.getElementById('leads-table-body');
+    if(!body) return;
+    body.innerHTML = '<tr><td colspan="5" class="p-10 text-center italic">Loading leads...</td></tr>';
+    
+    try {
+        const res = await fetch(`${API_BASE}/get-table?table=consultancy_leads`);
+        const data = await res.json();
+        
+        body.innerHTML = data.map(lead => {
+            const statusColor = lead.status === 'paid' ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600';
+            return `
+            <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                <td class="px-8 py-4">
+                    <div class="font-bold text-slate-900">${lead.student_name}</div>
+                    <div class="text-[10px] text-slate-400">${lead.phone_number}</div>
+                </td>
+                <td class="px-8 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">${lead.faculty_chosen}</td>
+                <td class="px-8 py-4 text-center font-black text-brandBlue">${lead.student_aggregate}</td>
+                <td class="px-8 py-4">
+                    <span class="px-3 py-1 ${statusColor} rounded-full text-[9px] font-black uppercase">${lead.status}</span>
+                </td>
+                <td class="px-8 py-4 text-right">
+                    <a href="https://wa.me/${lead.phone_number.replace(/\D/g,'')}" target="_blank" 
+                       class="inline-flex items-center justify-center w-8 h-8 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition shadow-sm">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+<button onclick="deleteRow('consultancy_leads', ${lead.id})" class="ml-2 text-slate-300 hover:text-red-500">
+    <i class="fas fa-trash"></i>
+</button>
+                </td>
+            </tr>`;
+        }).join('');
+    } catch (e) { body.innerHTML = '<tr><td colspan="5" class="p-10 text-center text-red-500">Error loading leads.</td></tr>'; }
+}
+
+async function downloadTable(tableName) {
+    try {
+        // 1. Fetch the data from your existing get-table endpoint
+        const res = await fetch(`${API_BASE}/get-table?table=${tableName}`);
+        const data = await res.json();
+
+        if (!data || data.length === 0) {
+            alert("No data found to back up.");
+            return;
+        }
+
+        // 2. Convert JSON to CSV
+        const headers = Object.keys(data[0]);
+        const csvContent = [
+            headers.join(','), // Header row
+            ...data.map(row => headers.map(fieldName => {
+                // Escape commas in strings to prevent CSV breaking
+                let val = row[fieldName] === null ? '' : row[fieldName];
+                if (typeof val === 'string') val = `"${val.replace(/"/g, '""')}"`;
+                return val;
+            }).join(','))
+        ].join('\r\n');
+
+        // 3. Create a download link
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob);
+        
+        const timestamp = new Date().toISOString().split('T')[0];
+        link.setAttribute("href", url);
+        link.setAttribute("download", `unimatcher_backup_${tableName}_${timestamp}.csv`);
+        link.style.visibility = 'hidden';
+        
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+    } catch (e) {
+        console.error("Backup Error:", e);
+        alert("Failed to generate backup.");
+    }
+}
+
+// 1. Add 'event' as a parameter
+async function runBulkDelete(table, event) {
+    // 2. Add this check at the top to find the cleanup-days input
+    const daysInput = document.getElementById('cleanup-days');
+    if (!daysInput) {
+        alert("Error: Could not find the 'cleanup-days' selection input.");
+        return;
+    }
+    
+    const days = daysInput.value;
+    const warningText = days == "0" ? "ALL DATA" : `data older than ${days} days`;
+    
+    // Double Confirmation
+    if (!confirm(`⚠️ DANGER: You are about to permanently delete ${warningText} from the "${table}" table. Proceed?`)) return;
+    if (days == "0" && !confirm("🚨 FINAL CHECK: You selected 'Wipe All Records'. Are you absolutely sure?")) return;
+
+    // 3. UI Loading State
+    const btn = event.currentTarget; 
+    const originalContent = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-1"></i> Cleaning...`;
+
+    try {
+        // NOTE: Ensure your API_BASE URL includes /api/admin if that's how your Worker is set up
+        const res = await fetch(`${API_BASE}/bulk-delete?table=${table}&days=${days}`, { 
+            method: 'DELETE' 
+        });
+        
+        const result = await res.json();
+
+        if (res.ok) {
+            alert(`✅ Success: Removed ${result.count || 0} records.`);
+            loadOverview(); 
+            
+            // Auto-refresh the leads or payments table if visible
+            if (table === 'consultancy_leads') loadLeads();
+            if (table === 'payments') loadPayments();
+        } else {
+            alert("❌ Failed: " + (result.error || "Server Error"));
+        }
+    } catch (e) {
+        console.error("Bulk Delete Error:", e);
+        alert("Network error. Please check your connection.");
+    } finally {
+        btn.innerHTML = originalContent;
+        btn.disabled = false;
+    }
+}
+
+async function loadUsers() {
+    const body = document.getElementById('user-table-body');
+    if (!body) return;
+    
+    // Updated colspan to 6 to match your new headers
+    body.innerHTML = '<tr><td colspan="6" class="p-10 text-center italic text-slate-400">Loading user directory...</td></tr>';
+    
+    try {
+        const res = await fetch(`${API_BASE}/users`);
+        const users = await res.json();
+        
+        if (!users || users.length === 0) {
+            body.innerHTML = '<tr><td colspan="6" class="p-10 text-center">No users found.</td></tr>';
+            return;
+        }
+
+        body.innerHTML = users.map(user => {
+            // Premium: Clean phone number for the WhatsApp link
+            const whatsappLink = user.phone ? `https://wa.me/${user.phone.replace(/\D/g, '')}` : '#';
+
+            return `
+                <tr class="border-b border-slate-50 hover:bg-slate-50/50 transition">
+                    <td class="px-8 py-4">
+                        <div class="font-bold text-slate-900">${user.name}</div>
+                        <div class="text-[11px] text-slate-400 font-mono">${user.email}</div>
+                    </td>
+
+                    <td class="px-8 py-4">
+                        <div class="flex items-center gap-2">
+                            <span class="font-semibold text-slate-700">${user.phone || '---'}</span>
+                            ${user.phone ? `
+                                <a href="${whatsappLink}" target="_blank" class="text-emerald-500 hover:text-emerald-600 transition" title="WhatsApp Chat">
+                                    <i class="fab fa-whatsapp"></i>
+                                </a>
+                            ` : ''}
+                        </div>
+                    </td>
+
+                    <td class="px-8 py-4">
+                        <div class="text-xs font-black text-brandBlue uppercase">${user.education_level || 'Pending'}</div>
+                        <div class="text-[11px] text-slate-400 italic">${user.target_country || 'Ghana'}</div>
+                    </td>
+
+                    <td class="px-8 py-4">
+                        <span class="px-2 py-1 bg-blue-50 text-blue-600 text-[10px] font-black rounded-md uppercase">${user.role}</span>
+                    </td>
+
+                    <td class="px-8 py-4">
+                        <span class="px-2 py-1 ${user.status === 'frozen' ? 'bg-amber-100 text-amber-700' : 'bg-emerald-50 text-emerald-600'} text-[10px] font-black rounded-md uppercase">
+                            ${user.status || 'active'}
+                        </span>
+                    </td>
+
+                    <td class="px-8 py-4 text-right">
+                        <div class="flex justify-end gap-2">
+                            <button onclick="toggleUserStatus('${user.id}', '${user.status}')" class="p-2 text-slate-300 hover:text-brandOrange transition" title="${user.status === 'frozen' ? 'Unfreeze' : 'Freeze'} User">
+                                <i class="fas ${user.status === 'frozen' ? 'fa-unlock' : 'fa-snowflake'}"></i>
+                            </button>
+                            <button onclick="deleteRow('users_auth', '${user.id}')" class="p-2 text-slate-300 hover:text-red-500 transition" title="Delete Permanent">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+    } catch (e) {
+        body.innerHTML = '<tr><td colspan="6" class="p-10 text-center text-red-500">Failed to load users. Check API connection.</td></tr>';
+    }
+}
+
+async function toggleUserStatus(userId, currentStatus) {
+    const nextStatus = currentStatus === 'frozen' ? 'active' : 'frozen';
+    const actionText = nextStatus === 'frozen' ? 'FREEZE (Disable Login)' : 'ACTIVATE (Allow Login)';
+    
+    if(!confirm(`Are you sure you want to ${actionText} for this user?`)) return;
+
+    try {
+        const res = await fetch(`${API_BASE}/users/status`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId, status: nextStatus })
+        });
+
+        if(res.ok) {
+            loadUsers(); // Refresh the table to show new badge
+        } else {
+            const error = await res.json();
+            alert("Update failed: " + error.message);
+        }
+    } catch (e) { 
+        alert("Network Error: Could not update status."); 
+    }
+}
+
+async function generateAgent(event) {
+    // Prevent page refresh if inside a form
+    if(event) event.preventDefault();
+
+    // 1. Grab inputs
+    const name = document.getElementById('agentName').value;
+    const phoneInput = document.getElementById('agentPhone').value;
+    const phone = phoneInput.replace(/\D/g, ''); 
+    const code = document.getElementById('agentCode').value.toUpperCase().trim();
+    const commission = document.getElementById('agentCommission').value || 10;
+
+    // --- GENERATE THE UNIQUE ACCESS CIPHER ---
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; 
+    let rawCipher = '';
+    for (let i = 0; i < 8; i++) {
+        rawCipher += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    const cipher = rawCipher.slice(0, 4) + "-" + rawCipher.slice(4); 
+
+    // Validation
+    if (!name || !phone || !code) {
+        alert("Please fill in the Name, WhatsApp Number, and Referral Code.");
+        return;
+    }
+
+    // UI Feedback - Fix: use event.currentTarget to get the button
+    const btn = event.currentTarget;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Authorizing...';
+    btn.disabled = true;
+
+    try {
+        // NOTE: Ensure API_BASE is defined (e.g., const API_BASE = "https://your-worker.com/api")
+        // We use the full path /api/admin/add-agent as seen in your Worker code
+        const response = await fetch(`${API_BASE}/add-agent`, { 
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                name, 
+                phone, 
+                code, 
+                commission_rate: commission,
+                access_cipher: cipher,
+                status: 'active'
+            })
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+            // 2. Links
+            const referralLink = `https://unimatcher-skynetconsult.com/signup.html?ref=${code}`;
+            const terminalLink = `https://unimatcher-skynetconsult.com/terminal.html`;
+            
+            // 3. WhatsApp Message
+            const message = `🚀 *VANGUARD ENLISTMENT APPROVED* 🚀%0A%0A` +
+                            `Hello Agent *${name}*, your field clearance is ready.%0A%0A` +
+                            `🆔 *Agent Code:* ${code}%0A` +
+                            `🔑 *Access Cipher:* ${cipher}%0A%0A` +
+                            `📡 *Your Referral Link:* ${referralLink}%0A` +
+                            `🖥️ *HQ Terminal (Login):* ${terminalLink}%0A%0A` +
+                            `_Instructions: Use your Code and Cipher to enter the HQ Terminal._`;
+            
+            const whatsappUrl = `https://wa.me/${phone}?text=${message}`;
+
+            alert("Agent Authorized! Opening WhatsApp...");
+            window.open(whatsappUrl, '_blank');
+
+            // Reset UI
+            document.getElementById('agentName').value = '';
+            document.getElementById('agentPhone').value = '';
+            document.getElementById('agentCode').value = '';
+            
+            // Refresh table if the function exists
+            if (typeof fetchAgents === "function") {
+                await fetchAgents();
+            }
+
+        } else {
+            throw new Error(result.error || "Server returned an error");
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        alert("Error: " + error.message);
+    } finally {
+        // Restore button
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    }
+}
+let currentAgentData = null; // Stores data for reports
+
+async function loadAgentStats() {
+    const body = document.getElementById('agent-table-body');
+    if (!body) return;
+
+    try {
+        // FIX: Ensure path matches your Worker exactly
+        const res = await fetch(`${API_BASE}/agents`);
+        const data = await res.json();
+        
+        // Update Stats Cards
+        document.getElementById('agent-total-clicks').innerText = (data.summary.totalClicks || 0).toLocaleString();
+        document.getElementById('agent-total-signups').innerText = (data.summary.totalSignups || 0).toLocaleString();
+        
+        // FIX: Update the new Total Checks card
+        const checksEl = document.getElementById('agent-total-checks-run');
+        if (checksEl) checksEl.innerText = (data.summary.totalChecks || 0).toLocaleString();
+        
+        const rate = data.summary.totalClicks > 0 ? ((data.summary.totalSignups / data.summary.totalClicks) * 100).toFixed(1) : 0;
+        document.getElementById('agent-conv-rate').innerText = `${rate}%`;
+
+        body.innerHTML = data.agents.map(agent => {
+            const isActive = agent.status !== 'inactive';
+            // FIX: Reference agent.id instead of just 'id' to avoid ReferenceError
+            return `
+            <tr class="border-b border-slate-50 hover:bg-slate-50/80 transition ${!isActive ? 'opacity-50' : ''}">
+                <td class="px-8 py-4">
+                    <button onclick="viewAgentUsers('${agent.code}', '${agent.name}')" class="text-left group outline-none">
+                        <div class="font-bold text-slate-900 group-hover:text-brandBlue transition flex items-center gap-1">
+                            ${agent.name} 
+                            <i class="fas fa-chevron-right text-[10px] opacity-0 group-hover:opacity-100 transition-all ml-1"></i>
+                        </div>
+                    </button>
+                </td>
+                <td class="px-8 py-4">
+                    <span class="px-3 py-1 bg-slate-100 text-brandBlue font-mono font-bold text-xs rounded-lg border border-slate-200">
+                        ${agent.code}
+                    </span>
+                </td>
+                <td class="px-8 py-4 text-center font-mono text-slate-500">${agent.clicks || 0}</td>
+                <td class="px-8 py-4 text-center font-bold text-brandOrange">${agent.signups || 0}</td>
+                <td class="px-8 py-4 text-center font-black text-emerald-600">${agent.total_checks || 0}</td>
+                <td class="px-8 py-4 text-center font-bold text-slate-400">
+                    ${agent.commission_rate || 10}%
+                </td>
+                <td class="px-8 py-4 text-right">
+                    <div class="flex justify-end gap-1">
+                        <button onclick="toggleAgentStatus(${agent.id}, '${agent.status}')" class="p-2 text-slate-400 hover:text-amber-500 transition" title="Pause/Play">
+                            <i class="fas ${isActive ? 'fa-pause-circle' : 'fa-play-circle'}"></i>
+                        </button>
+                        <button onclick="deleteRow('referral_agents', ${agent.id})" class="p-2 text-slate-300 hover:text-red-500 transition">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>`;
+        }).join('');
+    } catch (e) { 
+        console.error("Agent Load Error:", e);
+        body.innerHTML = '<tr><td colspan="7" class="p-10 text-center text-red-500 font-bold">Error loading agent data.</td></tr>';
+    }
+}
+
+// NEW: Missing function to handle the Pause/Play button
+async function toggleAgentStatus(agentId, currentStatus) {
+    // 1. Determine the new status
+    const nextStatus = currentStatus === 'active' ? 'inactive' : 'active';
+    
+    // 2. Visual feedback (Optional but nice)
+    const btn = event.currentTarget;
+    if (btn) btn.style.opacity = '0.5';
+
+    try {
+        const res = await fetch(`${API_BASE}/admin/agent-status`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                id: agentId, 
+                status: nextStatus 
+            })
+        });
+
+        if (res.ok) {
+            // 3. Refresh the table to show the new state (grayed out or active)
+            await loadAgentStats(); 
+        } else {
+            const err = await res.json();
+            alert("Error: " + err.error);
+        }
+    } catch (e) {
+        console.error("Status Update Failed:", e);
+        alert("Server connection failed. Check your internet.");
+    }
+}
+
+async function viewAgentUsers(agentCode, agentName, agentRate) {
+    // 1. UI Transitions
+    document.getElementById('main-agent-view').classList.add('hidden');
+    document.getElementById('agent-stats-grid').classList.add('hidden');
+    document.getElementById('agent-drilldown-view').classList.remove('hidden');
+    document.getElementById('back-to-agents').classList.remove('hidden');
+    
+    document.getElementById('drilldown-title').innerText = `Referrals: ${agentName}`;
+    const drillBody = document.getElementById('drilldown-table-body');
+    
+    drillBody.innerHTML = `
+        <tr>
+            <td colspan="5" class="p-20 text-center">
+                <div class="inline-block animate-spin text-brandBlue text-3xl mb-4"><i class="fas fa-circle-notch"></i></div>
+                <div class="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Decrypting Student Intel...</div>
+            </td>
+        </tr>`;
+
+    try {
+        const res = await fetch(`${API_BASE}/users?code=${agentCode.toUpperCase().trim()}`);
+        if (!res.ok) throw new Error(`Fetch Failed: ${res.status}`);
+
+        const filtered = await res.json();
+        
+        // --- KEY FIX: Assign Global Data for the Report Generator ---
+        currentAgentData = {
+            name: agentName,
+            code: agentCode,
+            rate: agentRate || 0.10, // Uses passed rate or default
+            referrals: filtered
+        };
+
+        const checkPrice = 10; 
+        let totalRevenue = 0;
+        let totalChecks = 0;
+
+        if (filtered.length === 0) {
+            drillBody.innerHTML = `<tr><td colspan="5" class="p-20 text-center text-slate-400">Zero assets deployed.</td></tr>`;
+            updateDrilldownStats(0, 0, 0);
+            return;
+        }
+
+        drillBody.innerHTML = filtered.map(u => {
+            const checks = parseInt(u.total_checks) || 0;
+            const commission = checks * (checkPrice * (currentAgentData.rate > 1 ? currentAgentData.rate / 100 : currentAgentData.rate));
+            
+            totalRevenue += commission;
+            totalChecks += checks;
+
+            return `
+                <tr class="hover:bg-slate-50/80 transition-all border-none group">
+                    <td class="px-10 py-6">
+                        <div class="flex items-center gap-4">
+                            <div class="h-10 w-10 rounded-2xl bg-brandBlue text-white flex items-center justify-center font-black text-sm shadow-lg shadow-brandBlue/20">
+                                ${u.name ? u.name.charAt(0) : 'S'}
+                            </div>
+                            <div>
+                                <div class="font-black text-slate-800 tracking-tight">${u.name || 'Anonymous'}</div>
+                                <div class="text-[9px] text-slate-400 font-mono font-bold uppercase tracking-widest">${u.id.substring(0,8)}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-10 py-6">
+                        <div class="text-slate-600 font-bold text-xs">${u.phone || 'NO PHONE'}</div>
+                        <div class="text-slate-400 text-[10px] italic">${u.email || 'No email log'}</div>
+                    </td>
+                    <td class="px-10 py-6 text-center">
+                        <span class="px-3 py-1 bg-slate-100 rounded-lg font-black text-slate-700 text-xs">${checks}</span>
+                    </td>
+                    <td class="px-10 py-6 text-right">
+                        <div class="font-black text-brandBlue text-base">₵${commission.toFixed(2)}</div>
+                        <div class="text-[8px] text-green-500 font-black uppercase tracking-tighter italic">Yield Verified</div>
+                    </td>
+                    <td class="px-10 py-6 text-right text-[10px] text-slate-400 font-bold uppercase">
+                        ${new Date(u.created_at).toLocaleDateString('en-GB')}
+                    </td>
+                </tr>`;
+        }).join('');
+
+        updateDrilldownStats(totalRevenue, totalChecks, filtered.length);
+
+    } catch (e) { 
+        console.error("Drilldown Error:", e);
+        drillBody.innerHTML = `<tr><td colspan="5" class="p-10 text-center text-red-500 font-black">Uplink Interrupted.</td></tr>`;
+    }
+}
+
+// Helper to update the 3 small cards at the top
+function updateDrilldownStats(rev, checks, totalUsers) {
+    document.getElementById('drilldown-total-revenue').innerText = `GHS ${rev.toFixed(2)}`;
+    document.getElementById('drilldown-total-checks').innerText = checks;
+    
+    const conv = totalUsers > 0 ? ((checks / totalUsers) * 100).toFixed(1) : 0;
+    document.getElementById('drilldown-conversion').innerText = `${conv}%`;
+}
+
+function showAgentList() {
+    currentAgentData = null; // Clear the "active" agent
+    document.getElementById('main-agent-view').classList.remove('hidden');    
+    document.getElementById('agent-stats-grid').classList.remove('hidden');
+    document.getElementById('agent-drilldown-view').classList.add('hidden');
+    document.getElementById('back-to-agents').classList.add('hidden');
+}
+
+// THE REPORT GENERATOR (Proof for manual payment)
+function printAgentReport() {
+    if(!currentAgentData || !currentAgentData.referrals) {
+        alert("No agent data loaded. Please view an agent's details before generating a report.");
+        return;
+    }
+    
+    const { name, referrals, code } = currentAgentData;
+    const rate = Number(currentAgentData.rate) || 0.10; 
+    const checkPrice = 10; 
+    
+    const totalChecks = referrals.reduce((sum, u) => sum + (Number(u.total_checks) || 0), 0);
+    const totalEarnings = totalChecks * (checkPrice * rate);
+    
+    const printWindow = window.open('', '_blank', 'width=900,height=800');
+    
+    // The trick is to break the script tag so the browser doesn't misinterpret it
+    const scriptClosing = "</" + "script>";
+
+    const htmlContent = `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Payout_Report_${code}</title>
+            <style>
+                * { box-sizing: border-box; -webkit-print-color-adjust: exact; }
+                body { font-family: 'Segoe UI', Helvetica, Arial, sans-serif; padding: 50px; color: #1e293b; line-height: 1.4; background: #fff; margin: 0; }
+                .header-flex { display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid #003B73; padding-bottom: 20px; margin-bottom: 30px; }
+                .brand { font-size: 28px; font-weight: 800; color: #003B73; text-transform: uppercase; letter-spacing: -1px; }
+                .brand span { color: #F28C00; }
+                .summary-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 25px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
+                .summary-item .label { font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+                .summary-item .value { font-size: 22px; font-weight: 800; color: #0f172a; }
+                .earnings-highlight { background: #003B73; color: white; padding: 15px 25px; border-radius: 12px; text-align: right; }
+                .earnings-highlight .label { color: rgba(255,255,255,0.8); font-size: 10px; text-transform: uppercase; font-weight: 800; }
+                .earnings-highlight .value { color: #ffffff; font-size: 26px; font-weight: 900; }
+                table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                th { text-align: left; background: #f1f5f9; padding: 12px 15px; font-size: 11px; text-transform: uppercase; color: #475569; border-bottom: 2px solid #e2e8f0; }
+                td { padding: 14px 15px; border-bottom: 1px solid #f1f5f9; font-size: 13px; color: #334155; }
+                .text-right { text-align: right; }
+                .signature-area { margin-top: 80px; display: flex; justify-content: space-between; }
+                .sig-box { width: 220px; text-align: center; }
+                .sig-line { border-top: 2px solid #1e293b; padding-top: 10px; font-size: 12px; font-weight: 800; text-transform: uppercase; color: #1e293b; }
+                .footer { margin-top: 60px; font-size: 11px; color: #94a3b8; text-align: center; border-top: 1px solid #f1f5f9; padding-top: 20px; }
+                @media print { body { padding: 20px; } .no-print { display: none; } }
+            </style>
+        </head>
+        <body>
+            <div class="header-flex">
+                <div>
+                    <div class="brand">Uni<span>Matcher</span></div>
+                    <div style="font-size: 12px; font-weight: 700; color: #64748b; margin-top: 4px;">AFFILIATE PAYOUT STATEMENT</div>
+                </div>
+                <div class="text-right">
+                    <div style="font-weight: 900; font-size: 16px;">${name}</div>
+                    <div style="font-size: 12px; color: #64748b; font-weight: 600;">AGENT ID: ${code} | ${new Date().toLocaleDateString('en-GB')}</div>
+                </div>
+            </div>
+
+            <div class="summary-box">
+                <div class="summary-item">
+                    <div class="label">Total Referrals</div>
+                    <div class="value">${referrals.length}</div>
+                </div>
+                <div class="summary-item">
+                    <div class="label">Total Checks</div>
+                    <div class="value">${totalChecks}</div>
+                </div>
+                <div class="summary-item">
+                    <div class="label">Comm. Rate</div>
+                    <div class="value">${(rate * 100).toFixed(0)}%</div>
+                </div>
+                <div class="earnings-highlight">
+                    <div class="label">Balance Due</div>
+                    <div class="value">GHS ${totalEarnings.toFixed(2)}</div>
+                </div>
+            </div>
+
+            <h3 style="font-size: 14px; text-transform: uppercase; letter-spacing: 1px; color: #475569; margin-bottom: 15px;">Transaction Itemization</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Joined Date</th>
+                        <th class="text-right">Checks</th>
+                        <th class="text-right">Commission</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${referrals.map(u => {
+                        const uChecks = Number(u.total_checks) || 0;
+                        const uEarnings = uChecks * (checkPrice * rate);
+                        return `
+                            <tr>
+                                <td>
+                                    <div style="font-weight: 700;">${u.name || 'Unknown Student'}</div>
+                                    <div style="font-size: 10px; color: #94a3b8; font-family: monospace;">${u.id ? u.id.substring(0,10) : 'N/A'}</div>
+                                </td>
+                                <td>${u.created_at ? new Date(u.created_at).toLocaleDateString('en-GB') : 'N/A'}</td>
+                                <td class="text-right" style="font-weight: 600;">${uChecks}</td>
+                                <td class="text-right" style="font-weight: 800; color: #003B73;">₵${uEarnings.toFixed(2)}</td>
+                            </tr>
+                        `;
+                    }).join('')}
+                </tbody>
+            </table>
+
+            <div class="signature-area">
+                <div class="sig-box">
+                    <div class="sig-line">Agent Signature</div>
+                </div>
+                <div class="sig-box">
+                    <div class="sig-line">System Administrator</div>
+                </div>
+            </div>
+
+            <div class="footer">
+                UniMatcher is a subsidiary of SkyNet Consult. <br>
+                This document is a system-generated audit report. Generated on ${new Date().toLocaleString()}.
+            </div>
+
+            <script>
+                window.onload = function() {
+                    setTimeout(() => { 
+                        window.print(); 
+                    }, 500);
+                };
+            ${scriptClosing}
+        </body>
+        </html>
+    `;
+
+    printWindow.document.write(htmlContent);
+    printWindow.document.close();
+}
+
+function exportUsersToCSV() {
+    const rows = document.querySelectorAll("#user-table-body tr");
+    if (rows.length === 0 || rows[0].innerText.includes("Loading")) {
+        alert("No data available to export.");
+        return;
+    }
+
+    let csvContent = "Name,Email,Phone,Education,Target_Country\n";
+
+    rows.forEach(row => {
+        const cols = row.querySelectorAll("td");
+        if (cols.length >= 3) {
+            // Clean the data: remove extra spaces and commas that break CSVs
+            const name = cols[0].querySelector('.font-bold')?.innerText.replace(/,/g, "") || "";
+            const email = cols[0].querySelector('.font-mono')?.innerText || "";
+            const phone = cols[1].innerText.replace(/\D/g, ""); // Strips everything but numbers for SMS tools
+            const education = cols[2].querySelector('.font-black')?.innerText || "";
+            const country = cols[2].querySelector('.italic')?.innerText || "";
+
+            csvContent += `${name},${email},${phone},${education},${country}\n`;
+        }
+    });
+
+    // Create a download link and trigger it
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", `UniMatcher_Leads_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+/**
+ * DB EXPLORER CRUD SYSTEM
+ * Handles: Search, Render, Edit, Update, and Delete
+ */
+
+ const tableSchemas = {
+    universities: ['university_id', 'university_name', 'country', 'campus'],
+    programs: ['program_id', 'university_id', 'program_name', 'cutoff_aggregate', 'campus', 'faculty'],
+    core_requirements: ['id', 'program_id', 'core_subject', 'min_grade', 'is_priority'],
+    elective_requirements: ['id', 'program_id', 'rule_type', 'subject', 'min_grade', 'required_count'],
+    scholarships: ['id', 'name', 'provider', 'amount', 'min_aggregate', 'deadline']
+};
+
+let explorerRawData = [];
+let explorerActiveTable = 'universities';
+
+// 1. Load Data for the Explorer
+async function loadExplorerData(tableName) {
+    explorerActiveTable = tableName;
+    const body = document.getElementById('explorer-body');
+    body.innerHTML = `<tr><td colspan="10" class="p-10 text-center animate-pulse text-xs font-black text-slate-400 uppercase tracking-widest">Fetching ${tableName}...</td></tr>`;
+
+    try {
+        const res = await fetch(`${API_BASE}/get-table?table=${tableName}`);
+        explorerRawData = await res.json();
+        renderExplorer(explorerRawData);
+    } catch (e) {
+        body.innerHTML = `<tr><td colspan="10" class="p-10 text-center text-red-500 font-bold">Failed to load data.</td></tr>`;
+    }
+}
+
+// 2. Render the Table with Action Buttons
+function renderExplorer(data) {
+    const cols = tableSchemas[explorerActiveTable];
+    const head = document.getElementById('explorer-head');
+    const body = document.getElementById('explorer-body');
+
+    // Generate Headers
+    head.innerHTML = `<tr>${cols.map(c => `<th class="px-6 py-4 uppercase text-[10px] tracking-[0.2em] font-black">${c}</th>`).join('')}<th class="px-6 py-4 text-right text-[10px] tracking-widest font-black uppercase">Actions</th></tr>`;
+
+    // Generate Rows
+    if (data.length === 0) {
+        body.innerHTML = `<tr><td colspan="10" class="p-10 text-center text-slate-400 italic">No records found.</td></tr>`;
+        return;
+    }
+
+    body.innerHTML = data.map(row => {
+        const rowId = row.id || row.university_id || row.program_id;
+        return `
+            <tr class="hover:bg-slate-50 transition border-b border-slate-50">
+                ${cols.map(c => `<td class="px-6 py-4 text-slate-600 font-bold text-xs">${row[c] ?? '-'}</td>`).join('')}
+                <td class="px-6 py-4 text-right space-x-3 whitespace-nowrap">
+                    <button onclick="openEditModal('${rowId}')" class="text-brandBlue hover:scale-125 transition inline-block p-2">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button onclick="deleteRowExplorer('${rowId}')" class="text-red-300 hover:text-red-600 transition inline-block p-2">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        `;
+    }).join('');
+}
+
+// 3. Global Filter for the Explorer
+function filterExplorer() {
+    const term = document.getElementById('explorer-search').value.toLowerCase().trim();
+    const filtered = explorerRawData.filter(row => 
+        Object.values(row).some(val => String(val).toLowerCase().includes(term))
+    );
+    renderExplorer(filtered);
+}
+
+// 4. The Edit Modal Logic (Build Inputs Dynamically)
+function openEditModal(id) {
+    const row = explorerRawData.find(r => (r.id || r.university_id || r.program_id) == id);
+    if (!row) return;
+
+    const container = document.getElementById('edit-inputs');
+    const meta = document.getElementById('edit-meta');
+    const cols = tableSchemas[explorerActiveTable];
+
+    meta.innerText = `${explorerActiveTable} | ID: ${id}`;
+    
+    container.innerHTML = cols.map(col => {
+        // IDs are usually readonly to prevent breaking relationships
+        const isReadonly = (col === 'id' || col === 'university_id' || col === 'program_id') 
+            ? 'readonly class="w-full px-5 py-3 bg-slate-100 rounded-2xl border border-slate-200 outline-none font-bold text-slate-400 cursor-not-allowed"' 
+            : 'class="w-full px-5 py-3 bg-slate-50 rounded-2xl border border-slate-100 outline-none focus:border-brandOrange font-bold text-slate-700 transition-all"';
+        
+        return `
+            <div>
+                <label class="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">${col}</label>
+                <input type="text" name="${col}" value="${row[col] ?? ''}" ${isReadonly}>
+            </div>
+        `;
+    }).join('');
+
+    document.getElementById('edit-modal').classList.remove('hidden');
+}
+
+function closeEditModal() {
+    document.getElementById('edit-modal').classList.add('hidden');
+}
+
+// 5. Submit Update to Worker
+document.getElementById('edit-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    btn.disabled = true;
+    btn.innerText = "Saving Changes...";
+
+    const formData = new FormData(e.target);
+    const updatedData = {};
+    formData.forEach((value, key) => { updatedData[key] = value; });
+
+    const metaText = document.getElementById('edit-meta').innerText;
+    const rowId = metaText.split('ID: ')[1];
+
+    try {
+        const res = await fetch(`${API_BASE}/update-row`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                table: explorerActiveTable,
+                id: rowId,
+                data: updatedData
+            })
+        });
+
+        if (res.ok) {
+            closeEditModal();
+            loadExplorerData(explorerActiveTable); // Refresh table
+        } else {
+            const err = await res.json();
+            alert("Update failed: " + err.error);
+        }
+    } catch (err) {
+        alert("System error: Could not reach the server.");
+    } finally {
+        btn.disabled = false;
+        btn.innerText = "Update Record";
+    }
+});
+
+// 6. Handling the Delete
+async function deleteRowExplorer(id) {
+    if (!confirm(`Are you sure you want to permanently delete this record from ${explorerActiveTable}?`)) return;
+    
+    try {
+        const res = await fetch(`${API_BASE}/delete-row`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ table: explorerActiveTable, id: id })
+        });
+        
+        if (res.ok) {
+            loadExplorerData(explorerActiveTable);
+        } else {
+            alert("Delete failed.");
+        }
+    } catch (err) {
+        alert("Server error during deletion.");
+    }
+}
+
+let currentWipeUniId = "";
+
+// 1. Fill the dropdown with universities
+async function loadWipeDropdown() {
+    const select = document.getElementById('wipe-university-select');
+    try {
+        const res = await fetch(`${API_BASE}/get-table?table=universities`);
+        const unis = await res.json();
+        select.innerHTML = unis.map(u => 
+            `<option value="${u.university_id}">${u.university_name} (${u.university_id})</option>`
+        ).join('');
+    } catch (e) { console.error("Dropdown load failed", e); }
+}
+
+// 2. Setup the Modal
+function openWipeModal() {
+    const select = document.getElementById('wipe-university-select');
+    currentWipeUniId = select.value;
+    const uniName = select.options[select.selectedIndex].text;
+
+    document.getElementById('wipe-target-display').innerText = uniName;
+    document.getElementById('verification-label').innerText = `Type "${currentWipeUniId}" to authorize`;
+    
+    // Reset inputs
+    document.getElementById('wipe-verification-input').value = "";
+    document.getElementById('check-wipe-cores').checked = false;
+    document.getElementById('check-wipe-electives').checked = false;
+    document.getElementById('check-wipe-programs').checked = false;
+
+    document.getElementById('wipe-modal').classList.remove('hidden');
+}
+
+function closeWipeModal() { document.getElementById('wipe-modal').classList.add('hidden'); }
+
+// 3. Send Wipe Command to Worker
+async function executeTargetedWipe() {
+    const verification = document.getElementById('wipe-verification-input').value.trim().toUpperCase();
+    if (verification !== currentWipeUniId.toUpperCase()) {
+        alert("Verification failed: ID mismatch.");
+        return;
+    }
+
+    const targets = {
+        cores: document.getElementById('check-wipe-cores').checked,
+        electives: document.getElementById('check-wipe-electives').checked,
+        programs: document.getElementById('check-wipe-programs').checked
+    };
+
+    if (!targets.cores && !targets.electives && !targets.programs) {
+        alert("Please select at least one item to wipe.");
+        return;
+    }
+
+    if (!confirm("FINAL WARNING: Selected data will be permanently deleted. Continue?")) return;
+
+    const btn = document.getElementById('final-wipe-btn');
+    btn.disabled = true;
+    btn.innerText = "PROCESSING...";
+
+    try {
+        const res = await fetch(`${API_BASE}/targeted-delete-university`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ university_id: currentWipeUniId, targets })
+        });
+
+        if (res.ok) {
+            alert("Data wipe completed successfully.");
+            closeWipeModal();
+        } else {
+            const err = await res.json();
+            alert("Error: " + err.error);
+        }
+    } catch (e) {
+        alert("Communication failure.");
+    } finally {
+        btn.disabled = false;
+        btn.innerText = "Execute Targeted Wipe";
+    }
+}
+
+    function openModal() { document.getElementById('import-modal').classList.remove('hidden'); }
+    function closeModal() { document.getElementById('import-modal').classList.add('hidden'); }
+    function openScholarshipModal() { document.getElementById('scholarship-modal').classList.remove('hidden'); }
+    function closeScholarshipModal() { document.getElementById('scholarship-modal').classList.add('hidden'); }
+    function logout() { localStorage.clear(); window.location.href = '/index.html'; }
+    document.addEventListener('DOMContentLoaded', loadOverview);
+</script>
+</body>
+</html>

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | UniMatcher</title>
+    <link rel="icon" type="image/png" href="/src/assets/unimatcher-logo.png">
+    <meta name="theme-color" content="#003B73">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: { 
+                extend: { 
+                    colors: { brandBlue: '#003B73', brandOrange: '#F28C00' }, 
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] } 
+                } 
+            }
+        }
+    </script>
+    <style>
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-in { animation: slideUp 0.6s ease-out forwards; }
+        
+        /* Smooth scale for buttons on mobile */
+        .active-scale:active { transform: scale(0.98); }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col relative overflow-x-hidden selection:bg-brandBlue/10 selection:text-brandBlue">
+    
+    <div class="fixed top-0 left-0 w-full h-full -z-10 overflow-hidden">
+        <div class="absolute -top-[5%] -left-[10%] w-[80%] md:w-[40%] h-[40%] bg-blue-200/50 rounded-full blur-[80px] md:blur-[100px] animate-pulse"></div>
+        <div class="absolute -bottom-[5%] -right-[10%] w-[80%] md:w-[40%] h-[40%] bg-orange-100/60 rounded-full blur-[80px] md:blur-[100px]"></div>
+    </div>
+
+    <main class="flex-grow flex items-center justify-center p-5 md:p-6">
+        <div class="max-w-md w-full animate-in">
+            
+            <div class="mb-6 md:mb-8 flex flex-col items-center">
+                <div class="p-3 bg-white rounded-2xl shadow-xl shadow-blue-900/5 mb-4">
+                    <img src="/src/assets/unimatcher-logo.png" alt="UniMatcher Logo" class="h-10 md:h-12">
+                </div>
+                <h2 class="text-brandBlue font-black text-2xl tracking-tight">UniMatcher</h2>
+            </div>
+
+            <div class="glass-card rounded-[2rem] md:rounded-[2.5rem] p-8 md:p-10 shadow-2xl shadow-blue-900/10 border border-white">
+                <div class="text-center mb-8">
+                    <h1 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight uppercase">Welcome Back</h1>
+                    <p class="text-slate-500 font-medium text-sm mt-1">Access your eligibility portal.</p>
+                </div>
+
+                <form id="login-form" class="space-y-4 md:space-y-5">
+                    <div class="space-y-2">
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] px-1">Email Address</label>
+                        <div class="relative group">
+                            <i class="fas fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-brandBlue transition-colors"></i>
+                            <input type="email" id="email" required 
+                                class="w-full pl-11 pr-4 py-4 bg-slate-50/50 border border-slate-200 rounded-2xl outline-none focus:border-brandBlue focus:ring-4 focus:ring-brandBlue/5 transition-all font-semibold text-slate-700 placeholder:text-slate-300 text-sm md:text-base" 
+                                placeholder="name@example.com">
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] px-1">Password</label>
+                        <div class="relative group">
+                            <i class="fas fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-brandBlue transition-colors"></i>
+                            <input type="password" id="password" required 
+                                class="w-full pl-11 pr-12 py-4 bg-slate-50/50 border border-slate-200 rounded-2xl outline-none focus:border-brandBlue focus:ring-4 focus:ring-brandBlue/5 transition-all font-semibold text-slate-700 placeholder:text-slate-300 text-sm md:text-base" 
+                                placeholder="••••••••">
+                            <button type="button" id="togglePassword" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-brandBlue transition-colors p-1">
+                                <i class="fas fa-eye" id="eyeIcon"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end px-1">
+                        <a href="#" id="forgot-password-link" class="text-[11px] font-bold text-slate-400 hover:text-brandBlue transition-colors">Forgot Password?</a>
+                    </div>
+
+                    <div id="g_id_onload"
+     data-client_id="697854031778-90cqmvsv7ljud0iop4m3rtdjus1eo5id.apps.googleusercontent.com"
+     data-context="signin"
+     data-ux_mode="popup"
+     data-callback="handleGoogleResponse"
+     data-auto_prompt="false">
+</div>
+
+<div class="g_id_signin"
+     data-type="standard"
+     data-shape="rectangular"
+     data-theme="outline"
+     data-text="signin_with"
+     data-size="large"
+     data-logo_alignment="left">
+</div>
+                    
+                    <button type="submit" id="submit-btn" class="w-full py-4 bg-brandBlue text-white font-extrabold rounded-2xl shadow-xl shadow-blue-900/20 hover:bg-blue-800 active-scale transition-all flex items-center justify-center gap-3 mt-2">
+                        <span>Sign In</span>
+                        <i class="fas fa-arrow-right text-sm"></i>
+                    </button>
+                </form>
+
+                <div class="mt-8 pt-6 border-t border-slate-50 text-center">
+                    <p class="text-slate-500 text-sm font-medium">
+                        New to UniMatcher? <a href="signup.html" class="text-brandBlue font-bold hover:underline underline-offset-4">Create an account</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+    <div id="forgot-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+    <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" id="modal-backdrop"></div>
+    <div class="glass-card relative w-full max-w-md p-8 md:p-10 rounded-[2.5rem] shadow-2xl border border-white animate-in">
+        <button id="close-modal" class="absolute right-6 top-6 text-slate-400 hover:text-brandBlue transition-colors">
+            <i class="fas fa-times"></i>
+        </button>
+        
+        <div id="step-email">
+            <h2 class="text-2xl font-black text-slate-900 mb-2">Reset Password</h2>
+            <p class="text-slate-500 text-sm mb-6">Enter your email to receive a 6-digit reset code.</p>
+            <input type="email" id="reset-email" class="w-full px-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:border-brandBlue transition-all font-semibold mb-4" placeholder="name@example.com">
+            <button id="send-otp-btn" class="w-full py-4 bg-brandBlue text-white font-extrabold rounded-2xl shadow-xl hover:bg-blue-800 transition-all">Send Code</button>
+        </div>
+
+        <div id="step-otp" class="hidden">
+            <h2 class="text-2xl font-black text-slate-900 mb-2">Enter Code</h2>
+            <p class="text-slate-500 text-sm mb-6">We sent a code to your email. Enter it below with your new password.</p>
+            <input type="text" id="otp-code" class="w-full px-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:border-brandBlue transition-all font-semibold mb-4 text-center tracking-[0.5em]" placeholder="000000" maxlength="6">
+            <input type="password" id="new-password" class="w-full px-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:border-brandBlue transition-all font-semibold mb-4" placeholder="New Password">
+            <button id="reset-final-btn" class="w-full py-4 bg-brandOrange text-white font-extrabold rounded-2xl shadow-xl hover:bg-orange-600 transition-all">Update Password</button>
+        </div>
+    </div>
+</div>
+
+    <script>
+        const passwordInput = document.getElementById('password');
+        const toggleBtn = document.getElementById('togglePassword');
+        const eyeIcon = document.getElementById('eyeIcon');
+        const loginForm = document.getElementById('login-form');
+        const submitBtn = document.getElementById('submit-btn');
+
+        // Toggle Password Visibility
+        toggleBtn.addEventListener('click', () => {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            eyeIcon.classList.toggle('fa-eye');
+            eyeIcon.classList.toggle('fa-eye-slash');
+        });
+
+        /// Form Submission logic
+loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const originalBtnContent = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = `<i class="fas fa-circle-notch animate-spin"></i> <span>Authenticating...</span>`;
+    
+    const payload = {
+        email: document.getElementById('email').value.trim(),
+        password: document.getElementById('password').value
+    };
+
+    try {
+        const res = await fetch('https://api.unimatcher-skynetconsult.com/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+            // Consistent user_info structure
+            const userInfo = {
+                id: data.id || data.userId,
+                name: data.name,
+                role: data.role,
+                email: data.email
+            };
+
+            localStorage.setItem('user_info', JSON.stringify(userInfo));
+            
+            if (data.role === 'admin') {
+                localStorage.setItem('admin_token', 'admin123');
+            }
+            
+            window.location.href = 'dashboard.html';
+        } else {
+            // HANDLER FOR FROZEN USERS
+            if (res.status === 403 || data.error.includes("frozen")) {
+                alert("🚫 ACCOUNT FROZEN: Your access has been restricted by an administrator. Please contact support.");
+            } else {
+                alert(data.error || "Invalid email or password");
+            }
+            resetButton();
+        }
+    } catch (err) {
+        alert("Server connection failed. Please try again.");
+        resetButton();
+    }
+
+    function resetButton() {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnContent;
+    }
+});
+
+const forgotModal = document.getElementById('forgot-modal');
+const forgotLink = document.getElementById('forgot-password-link');
+const sendOtpBtn = document.getElementById('send-otp-btn');
+const resetFinalBtn = document.getElementById('reset-final-btn');
+
+// Open/Close logic
+forgotLink.onclick = (e) => { e.preventDefault(); forgotModal.classList.remove('hidden'); };
+document.getElementById('close-modal').onclick = () => { forgotModal.classList.add('hidden'); };
+
+// Part A: Send OTP
+sendOtpBtn.onclick = async () => {
+    const email = document.getElementById('reset-email').value;
+    
+    // Premium Touch: Show loading state
+    const originalText = sendOtpBtn.innerText;
+    sendOtpBtn.disabled = true;
+    sendOtpBtn.innerText = "Sending Code...";
+
+    try {
+        const res = await fetch('https://api.unimatcher-skynetconsult.com/api/forgot-password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+            document.getElementById('step-email').classList.add('hidden');
+            document.getElementById('step-otp').classList.remove('hidden');
+        } else {
+            alert(data.error || "Something went wrong.");
+        }
+    } catch (err) {
+        alert("Connection failed. Please try again.");
+    } finally {
+        sendOtpBtn.disabled = false;
+        sendOtpBtn.innerText = originalText;
+    }
+};
+
+// Part B: Final Reset
+resetFinalBtn.onclick = async () => {
+    const payload = {
+        email: document.getElementById('reset-email').value,
+        otp: document.getElementById('otp-code').value,
+        newPassword: document.getElementById('new-password').value
+    };
+
+    const res = await fetch('https://api.unimatcher-skynetconsult.com/api/verify-reset', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    });
+
+    if (res.ok) {
+        alert("✅ Password updated! You can now login.");
+        location.reload();
+    } else {
+        alert("Invalid code. Please try again.");
+    }
+};
+
+function handleGoogleResponse(response) {
+    // 1. Corrected URL
+    fetch('https://api.unimatcher-skynetconsult.com/api/auth/google', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ credential: response.credential })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            // 2. Using consistent key: 'user_info'
+            localStorage.setItem('user_info', JSON.stringify(data.user));
+            
+            // 3. Reliable redirect
+            window.location.href = 'dashboard.html';
+        } else {
+            alert("Google Sign-In failed: " + (data.error || "Unknown error"));
+        }
+    })
+    .catch(err => {
+        console.error("Connection Error:", err);
+        alert("Could not reach the authentication server.");
+    });
+}
+    </script>
+</body>
+</html>
