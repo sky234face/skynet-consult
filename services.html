@@ -5,159 +5,359 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Services | SkyNet Consult Premium</title>
     <link rel="icon" type="image/png" href="images/Skynet.png">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <style>
-        /* PAGE-SPECIFIC PREMIUM STYLES */
-        .services-hero {
-            padding: 120px 8% 80px;
-            background: radial-gradient(circle at top right, var(--light-blue), transparent);
-            text-align: center;
+        /* =========================================
+           BASE STYLES & VARIABLES
+           ========================================= */
+        :root {
+            --navy: #0a192f;
+            --skynet-blue: #3b82f6;
+            --skynet-light: #eff6ff;
+            --skynet-gradient: linear-gradient(135deg, #3b82f6, #06b6d4, #3b82f6);
+            --white: #ffffff;
+            --gray-100: #f8fafc;
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--gray-100); color: var(--navy); overflow-x: hidden; }
+
+        /* --- ATMOSPHERIC BACKGROUND GLOWS --- */
+        .bg-glow {
+            position: absolute; width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%; z-index: -1; pointer-events: none;
+            animation: floatGlow 10s infinite alternate ease-in-out;
+        }
+        .bg-glow.top-left { top: -150px; left: -100px; }
+        .bg-glow.bottom-right { bottom: 20%; right: -200px; animation-delay: -5s; }
+
+        @keyframes floatGlow {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(50px, 50px) scale(1.1); }
+        }
+
+        /* =========================================
+           HERO SECTION
+           ========================================= */
+        .services-hero {
+            padding: 8rem 8% 4rem;
+            text-align: center;
+            position: relative;
+            animation: slideUpFade 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .tagline {
+            display: inline-block;
+            padding: 0.6rem 1.2rem;
+            background: var(--skynet-light);
+            color: var(--skynet-blue);
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            letter-spacing: 0.5px;
+        }
+
+        .services-hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            color: var(--navy);
+            letter-spacing: -1.5px;
+            margin-bottom: 1.5rem;
+        }
+
+        .highlight {
+            background: var(--skynet-gradient);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: gradientText 4s linear infinite;
+        }
+
+        @keyframes gradientText {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        /* =========================================
+           PREMIUM DARK CARDS (Fixed for White Text)
+           ========================================= */
         .services-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            padding: 0 8% 100px;
-            max-width: 1300px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            padding: 0 8% 6rem;
+            max-width: 1400px;
             margin: 0 auto;
+            perspective: 1200px;
         }
 
-        /* The Premium Service Card */
         .card-premium {
-            background: var(--white);
-            border: 1px solid #e2e8f0;
-            border-radius: 30px;
-            padding: 45px;
+            /* Changed to deep navy to make white text visible and premium */
+            background: linear-gradient(145deg, var(--navy), #0f2547);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 32px;
+            padding: 3rem 2.5rem;
             position: relative;
             transition: var(--transition);
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            transform-style: preserve-3d;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            opacity: 1;
         }
 
         .card-premium::before {
             content: "";
             position: absolute;
             top: 0; left: 0; width: 100%; height: 6px;
-            background: linear-gradient(90deg, var(--skynet-blue), #007bff);
+            background: var(--skynet-gradient);
+            background-size: 200% auto;
             opacity: 0;
-            transition: 0.3s;
+            transition: 0.4s ease;
+            z-index: 2;
+        }
+
+        /* Blue glow that tracks your mouse */
+        .card-premium::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(59, 130, 246, 0.15), transparent 40%);
+            z-index: 0; pointer-events: none; opacity: 0; transition: opacity 0.4s;
         }
 
         .card-premium:hover {
-            transform: translateY(-12px);
-            box-shadow: 0 30px 60px rgba(10, 25, 47, 0.08);
-            border-color: var(--skynet-blue);
+            box-shadow: 0 30px 60px rgba(10, 25, 47, 0.3);
+            border-color: rgba(59, 130, 246, 0.4);
         }
 
-        .card-premium:hover::before { opacity: 1; }
+        .card-premium:hover::before,
+        .card-premium:hover::after { opacity: 1; }
+
+        .card-premium > * { position: relative; z-index: 1; pointer-events: none; }
+        .card-premium a { pointer-events: auto; }
 
         .card-number {
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             font-weight: 800;
-            color: var(--skynet-blue);
-            background: var(--light-blue);
-            width: 40px; height: 40px;
+            color: var(--white);
+            background: rgba(59, 130, 246, 0.2);
+            width: 45px; height: 45px;
             display: flex; align-items: center; justify-content: center;
-            border-radius: 10px;
-            margin-bottom: 25px;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            transform: translateZ(30px);
+            border: 1px solid rgba(59, 130, 246, 0.4);
         }
 
         .card-premium h3 {
             font-size: 1.6rem;
-            color: var(--navy);
-            margin-bottom: 15px;
+            color: var(--white) !important; /* Forced white to ensure visibility */
+            margin-bottom: 1rem;
             font-weight: 800;
+            transform: translateZ(25px);
         }
 
         .card-premium p {
-            color: var(--text-muted);
+            color: rgba(255, 255, 255, 0.75) !important;
             font-size: 1.05rem;
             line-height: 1.7;
-            margin-bottom: 30px;
+            margin-bottom: 2.5rem;
             flex-grow: 1;
+            transform: translateZ(15px);
         }
 
-        /* Action Link within card */
         .card-link {
             font-weight: 700;
-            color: var(--navy);
+            color: var(--skynet-blue) !important;
             text-decoration: none;
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: 10px;
-            transition: 0.3s;
+            gap: 8px;
+            transition: var(--transition);
+            transform: translateZ(35px);
+            font-size: 1.05rem;
         }
 
-        .card-link:hover { color: var(--skynet-blue); }
+        .card-link span { transition: transform 0.3s ease; }
+        .card-link:hover { color: var(--white) !important; }
+        .card-link:hover span { transform: translateX(5px); }
 
-        /* Custom CTA Section */
+        /* =========================================
+           CUSTOM CTA SECTION
+           ========================================= */
+        .cta-section {
+            padding: 0 8% 6rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
         .cta-box {
             background: var(--navy);
             border-radius: 40px;
-            padding: 80px 5%;
-            margin: 0 8% 100px;
+            padding: 6rem 4rem;
             text-align: center;
             color: var(--white);
             position: relative;
             overflow: hidden;
+            box-shadow: 0 30px 60px rgba(10, 25, 47, 0.2);
         }
 
-        .cta-box h2 { font-size: 2.5rem; margin-bottom: 20px; }
-        .cta-box p { opacity: 0.8; margin-bottom: 40px; max-width: 600px; margin-inline: auto; }
+        .cta-bg-mesh {
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.25), transparent 60%);
+            animation: rotateMesh 15s linear infinite;
+            z-index: 0; pointer-events: none;
+        }
 
+        @keyframes rotateMesh { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .cta-content { position: relative; z-index: 1; }
+        
+        .cta-box h2 { 
+            font-size: clamp(2rem, 4vw, 3.2rem); 
+            margin-bottom: 1.5rem; 
+            font-weight: 800; 
+            letter-spacing: -1px; 
+            color: var(--white) !important;
+        }
+        
+        .cta-box p { 
+            font-size: 1.2rem; 
+            color: rgba(255,255,255,0.8) !important; 
+            margin-bottom: 2.5rem; 
+            max-width: 600px; 
+            margin-inline: auto; 
+            line-height: 1.6;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            background: var(--skynet-blue);
+            color: white !important;
+            padding: 1.2rem 3rem;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: var(--transition);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: white;
+            color: var(--navy) !important;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(255, 255, 255, 0.2);
+        }
+
+        /* --- RESPONSIVE LAYOUT --- */
         @media (max-width: 768px) {
-            .services-hero h1 { font-size: 2.5rem; }
-            .cta-box h2 { font-size: 1.8rem; }
+            .services-hero { padding: 6rem 5% 3rem; }
+            .services-grid { grid-template-columns: 1fr; padding: 0 5% 4rem; }
+            .cta-section { padding: 0 5% 4rem; }
+            .cta-box { padding: 4rem 2rem; border-radius: 32px; }
         }
+
+        @keyframes slideUpFade { 0% { opacity: 0; transform: translateY(30px); } 100% { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
+    <div class="bg-glow top-left"></div>
+    <div class="bg-glow bottom-right"></div>
+
+    <!-- HERO SECTION -->
     <header class="services-hero">
         <span class="tagline">✦ Professional Solutions</span>
         <h1>Comprehensive Support for <br><span class="highlight">Success-Driven Students.</span></h1>
     </header>
 
+    <!-- PREMIUM DARK SERVICES GRID -->
     <main class="services-grid">
-        <div class="card-premium">
+        <div class="card-premium target-3d-card">
             <div class="card-number">01</div>
             <h3>University Admissions</h3>
-            <p>Complete management of local and international applications. We handle the paperwork, you focus on your future.</p>
+            <p>Complete management of local and international applications. We handle the paperwork, track deadlines, and ensure compliance so you can focus on your future.</p>
             <a href="service-apply.html" class="card-link">Apply Now <span>→</span></a>
         </div>
 
-        <div class="card-premium">
+        <div class="card-premium target-3d-card">
             <div class="card-number">02</div>
             <h3>E-Voucher Portal</h3>
-            <p>Instant, secure digital delivery of WASSCE, BECE, and University admission vouchers directly to your phone.</p>
+            <p>Instant, secure digital delivery of WASSCE, BECE, and University admission vouchers directly to your phone via Mobile Money integration.</p>
             <a href="vouchers.html" class="card-link">Purchase Vouchers <span>→</span></a>
         </div>
 
-        <div class="card-premium">
+        <div class="card-premium target-3d-card">
             <div class="card-number">03</div>
             <h3>Career Mapping</h3>
-            <p>Data-driven counselling sessions to align your academic choices with the most profitable career paths in Ghana.</p>
+            <p>Data-driven counselling sessions to align your academic strengths and personal interests with the most profitable and in-demand career paths in Ghana.</p>
             <a href="service-career.html" class="card-link">Book Session <span>→</span></a>
         </div>
 
-        <div class="card-premium">
+        <div class="card-premium target-3d-card">
             <div class="card-number">04</div>
             <h3>UniMatcher® Search</h3>
-            <p>Our proprietary tool that finds the perfect university course based on your specific WASSCE result breakdown.</p>
+            <p>Our proprietary placement engine that instantly finds the perfect university course combinations based on your exact WASSCE result breakdown.</p>
             <a href="unimatcher.html" class="card-link">Try UniMatcher® <span>→</span></a>
         </div>
     </main>
 
-    <section class="cta-box">
-        <h2>Your future is waiting.</h2>
-        <p>Connect with a SkyNet Consult agent today for a personalized orientation session.</p>
-        <a href="contact.html" class="btn-primary" style="background: var(--skynet-blue) !important;">Speak with an Expert</a>
+    <!-- HIGH-END CTA SECTION -->
+    <section class="cta-section">
+        <div class="cta-box">
+            <div class="cta-bg-mesh"></div>
+            <div class="cta-content">
+                <h2>Your future is waiting.</h2>
+                <p>Connect with a SkyNet Consult agent today for a personalized orientation session and take the guesswork out of your application.</p>
+                <a href="contact.html" class="btn-primary">Speak with an Expert</a>
+            </div>
+        </div>
     </section>
 
     <script src="global.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            try {
+                const targets = document.querySelectorAll('.target-3d-card');
+
+                const handleMouseMove = (e, element, intensity = 8) => {
+                    const rect = element.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    const rotateX = ((y - centerY) / centerY) * -intensity;
+                    const rotateY = ((x - centerX) / centerX) * intensity;
+                    
+                    element.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                    
+                    element.style.setProperty('--mouse-x', `${x}px`);
+                    element.style.setProperty('--mouse-y', `${y}px`);
+                };
+
+                const resetTransform = (element) => {
+                    element.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg)';
+                };
+
+                targets.forEach(target => {
+                    target.addEventListener('mousemove', (e) => handleMouseMove(e, target, 8));
+                    target.addEventListener('mouseleave', () => resetTransform(target));
+                });
+            } catch (error) {
+                console.error("Physics engine error:", error);
+            }
+        });
+    </script>
 </body>
 </html>

@@ -3,211 +3,295 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UniMatcher | Launching April 1st</title>
+    <title>UniMatcher® | Launching June 1st</title>
     <link rel="icon" type="image/png" href="images/Skynet.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
     <style>
-    :root {
-        --dark-bg: #020617;
-        --uni-blue: #3b82f6;
-        --uni-orange: #f59e0b;
-        --glass: rgba(255, 255, 255, 0.03);
-        --glass-border: rgba(255, 255, 255, 0.1);
-    }
-
-    /* --- SIDEBAR NEUTRALIZER --- */
-    /* This stops global.js from pushing your content */
-    aside, .sidebar, #sidebar, [class*="sidebar"] {
-        display: none !important;
-        width: 0 !important;
-        position: absolute !important;
-        visibility: hidden !important;
-    }
-
-    /* Force the main container to be full width */
-    body, html {
-        margin: 0 !important;
-        padding: 0 !important;
-        overflow-x: hidden !important;
-        width: 100% !important;
-    }
-
-    body {
-        background-color: var(--dark-bg);
-        color: white;
-        font-family: 'Inter', sans-serif;
-    }
-
-    /* --- WRAPPER --- */
-    .coming-soon-wrapper {
-        min-height: 100vh;
-        width: 100% !important;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 40px 20px;
-        position: relative;
-        text-align: center;
-        box-sizing: border-box;
-        margin: 0 !important; /* Overrides global.js margins */
-    }
-
-    .glow-bg {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.15) 0%, transparent 50%);
-        z-index: -1;
-    }
-
-    .status-badge {
-        background: rgba(245, 158, 11, 0.1);
-        border: 1px solid var(--uni-orange);
-        color: var(--uni-orange);
-        padding: 8px 20px;
-        border-radius: 100px;
-        font-size: 11px;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        margin-bottom: 20px;
-        animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-
-    .main-title {
-        font-size: clamp(1.8rem, 8vw, 4rem);
-        font-weight: 900;
-        line-height: 1.1;
-        margin: 0 0 15px 0;
-    }
-
-    .gradient-text {
-        background: linear-gradient(180deg, #fff 30%, #94a3b8 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-
-    .sub-text {
-        color: #94a3b8;
-        font-size: clamp(14px, 4vw, 17px);
-        max-width: 500px;
-        margin: 0 auto 30px;
-        line-height: 1.5;
-    }
-
-    .countdown-grid {
-        display: flex;
-        justify-content: center;
-        gap: clamp(10px, 4vw, 30px);
-        margin-bottom: 40px;
-    }
-
-    .time-box span {
-        display: block;
-        font-size: clamp(24px, 7vw, 40px);
-        font-weight: 900;
-        color: white;
-    }
-
-    .time-box label {
-        font-size: 9px;
-        color: var(--uni-blue);
-        text-transform: uppercase;
-    }
-
-    .preview-box {
-        position: relative;
-        width: 100%;
-        max-width: 500px;
-        height: 200px;
-        margin: 0 auto 40px;
-    }
-
-    .preview-img {
-        position: absolute;
-        width: 70%;
-        border-radius: 12px;
-        border: 1px solid var(--glass-border);
-        left: 50%;
-        transform: translateX(-50%);
-        transition: 0.5s ease;
-    }
-
-    .img-1 { top: 0; opacity: 0.2; filter: blur(5px); transform: translateX(-60%) scale(0.9); }
-    .img-2 { top: 20px; opacity: 0.8; transform: translateX(-40%); }
-
-    .notify-form {
-        background: var(--glass);
-        backdrop-filter: blur(20px);
-        padding: 6px;
-        border-radius: 16px;
-        border: 1px solid var(--glass-border);
-        display: flex;
-        width: 100%;
-        max-width: 400px;
-        margin: 0 auto;
-    }
-
-    .notify-form input {
-        background: transparent;
-        border: none;
-        color: white;
-        padding: 12px 15px;
-        flex: 1;
-        outline: none;
-        font-size: 15px;
-    }
-
-    .btn-launch {
-        background: var(--uni-blue);
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 12px;
-        font-weight: 700;
-        cursor: pointer;
-    }
-
-    @media (max-width: 600px) {
-        .notify-form {
-            flex-direction: column;
-            background: transparent;
-            border: none;
-            gap: 10px;
+        /* =========================================
+           BASE STYLES & VARIABLES
+           ========================================= */
+        :root {
+            --dark-bg: #020617; /* Deep premium obsidian */
+            --uni-blue: #3b82f6;
+            --uni-blue-glow: rgba(59, 130, 246, 0.5);
+            --uni-orange: #f59e0b;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .notify-form input {
+
+        /* --- LAYOUT OVERRIDES --- */
+        /* Neutralizes any global.js sidebars so the squeeze page is perfectly centered */
+        aside, .sidebar, #sidebar, [class*="sidebar"] { display: none !important; width: 0 !important; position: absolute !important; visibility: hidden !important; }
+        
+        body, html { margin: 0; padding: 0; overflow-x: hidden; width: 100%; height: 100%; }
+
+        body {
+            background-color: var(--dark-bg);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- MAIN WRAPPER & ATMOSPHERE --- */
+        .coming-soon-wrapper {
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            position: relative;
+            text-align: center;
+            box-sizing: border-box;
+            z-index: 1;
+        }
+
+        .ambient-glow {
+            position: absolute;
+            top: -20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80vw;
+            max-width: 800px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 60%);
+            z-index: -1;
+            animation: pulseGlow 8s infinite alternate ease-in-out;
+            pointer-events: none;
+        }
+
+        @keyframes pulseGlow {
+            0% { opacity: 0.6; transform: translateX(-50%) scale(0.9); }
+            100% { opacity: 1; transform: translateX(-50%) scale(1.1); }
+        }
+
+        /* --- ENTRANCE ANIMATIONS --- */
+        .fade-in-up {
+            opacity: 0;
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- TYPOGRAPHY & BADGE --- */
+        .status-badge {
+            display: inline-block;
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: var(--uni-orange);
+            padding: 8px 24px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.1);
+        }
+
+        .main-title {
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            font-weight: 900;
+            line-height: 1.05;
+            margin: 0 0 20px 0;
+            letter-spacing: -1.5px;
+        }
+
+        .gradient-text {
+            background: linear-gradient(180deg, #ffffff 20%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .sub-text {
+            color: #94a3b8;
+            font-size: clamp(15px, 4vw, 18px);
+            max-width: 550px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+
+        /* --- COUNTDOWN ENGINE --- */
+        .countdown-grid {
+            display: flex;
+            justify-content: center;
+            gap: clamp(15px, 4vw, 40px);
+            margin-bottom: 50px;
+        }
+
+        .time-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .time-box span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: clamp(60px, 12vw, 90px);
+            height: clamp(70px, 14vw, 100px);
             background: var(--glass);
             border: 1px solid var(--glass-border);
-            border-radius: 12px;
+            border-radius: 16px;
+            font-size: clamp(28px, 6vw, 42px);
+            font-weight: 900;
+            color: white;
+            box-shadow: inset 0 2px 10px rgba(255,255,255,0.02), 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 10px;
         }
-        .btn-launch { width: 100%; padding: 15px; }
-        .preview-box { height: 160px; }
-    }
-</style>
+
+        .time-box label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--uni-blue);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* --- 3D PREMIUM IMAGE SHOWCASE --- */
+        .preview-showcase {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            height: 280px;
+            margin: 0 auto 50px;
+            perspective: 1200px;
+            display: flex;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .showcase-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+        }
+
+        .preview-img {
+            position: absolute;
+            width: 75%;
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
+            left: 50%;
+            transition: var(--transition);
+        }
+
+        /* Back Image (Blurred & Faded) */
+        .img-back {
+            top: 0;
+            transform: translateX(-60%) translateZ(-40px);
+            opacity: 0.3;
+            filter: blur(8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        /* Front Image (Sharp & Glowing) */
+        .img-front {
+            top: 30px;
+            transform: translateX(-40%) translateZ(40px);
+            opacity: 1;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6), 0 0 40px rgba(59, 130, 246, 0.1);
+        }
+
+        .showcase-wrapper:hover .img-back { opacity: 0.5; filter: blur(4px); transform: translateX(-65%) translateZ(-50px); }
+        .showcase-wrapper:hover .img-front { transform: translateX(-35%) translateZ(60px); box-shadow: 0 40px 80px rgba(0,0,0,0.8), 0 0 60px rgba(59, 130, 246, 0.2); }
+
+        /* --- HIGH-END NOTIFY FORM --- */
+        .notify-form {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 8px;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            width: 100%;
+            max-width: 450px;
+            margin: 0 auto;
+            transition: var(--transition);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .notify-form:focus-within {
+            border-color: rgba(59, 130, 246, 0.4);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2), 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        .notify-form input {
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 15px 20px;
+            flex: 1;
+            outline: none;
+            font-size: 16px;
+        }
+
+        .notify-form input::placeholder { color: #64748b; }
+
+        .btn-launch {
+            background: var(--uni-blue);
+            color: white;
+            border: none;
+            padding: 0 25px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.2);
+        }
+
+        .btn-launch:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(59, 130, 246, 0.4);
+        }
+
+        /* --- MOBILE RESPONSIVE --- */
+        @media (max-width: 600px) {
+            .preview-showcase { height: 180px; margin-bottom: 30px; }
+            .img-front { top: 20px; width: 85%; }
+            .img-back { width: 85%; }
+            .notify-form { flex-direction: column; background: transparent; border: none; gap: 12px; box-shadow: none; padding: 0; }
+            .notify-form:focus-within { box-shadow: none; border-color: transparent; }
+            .notify-form input { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border); border-radius: 16px; width: 100%; box-sizing: border-box; }
+            .btn-launch { width: 100%; padding: 18px; border-radius: 16px; }
+        }
+    </style>
 </head>
 <body>
 
     <main class="coming-soon-wrapper">
-        <div class="glow-bg"></div>
+        <div class="ambient-glow"></div>
 
-        <div class="status-badge">Launching April 1st</div>
+        <div class="status-badge fade-in-up">Launching June 1st</div>
         
-        <h1 class="main-title">
+        <h1 class="main-title fade-in-up delay-1">
             <span class="gradient-text">The Future of</span><br>
             <span style="color: var(--uni-blue);">Academic Matching.</span>
         </h1>
 
-        <p class="sub-text">
-            We're upgrading UniMatcher with the 2026 university requirements. 
-            Get ready for the most accurate placement tool in Ghana.
+        <p class="sub-text fade-in-up delay-1">
+            We're upgrading UniMatcher® with the 2026 university requirements. 
+            Get ready for the most accurate, data-driven placement tool in Ghana.
         </p>
 
-        <div class="countdown-grid">
+        <!-- Dynamic JS Countdown -->
+        <div class="countdown-grid fade-in-up delay-2">
             <div class="time-box">
                 <span id="days">00</span>
                 <label>Days</label>
@@ -226,41 +310,87 @@
             </div>
         </div>
 
-        <div class="preview-box">
-            <img src="images/dash.png" class="preview-img img-1" alt="Dashboard">
-            <img src="images/UI UniMatcher.png" class="preview-img img-2" alt="Interface">
+        <!-- 3D Image Showcase -->
+        <div class="preview-showcase fade-in-up delay-3 target-3d-card">
+            <div class="showcase-wrapper">
+                <img src="images/dash.png" class="preview-img img-back" alt="Dashboard Background">
+                <img src="images/UI UniMatcher.png" class="preview-img img-front" alt="UniMatcher Interface">
+            </div>
         </div>
 
-        <div class="notify-form">
-            <input type="email" placeholder="Your email address...">
-            <button class="btn-launch">Get Early Access</button>
-        </div>
+        <!-- Notification Capture -->
+        <form class="notify-form fade-in-up delay-4" onsubmit="event.preventDefault(); alert('You are on the list! We will notify you on June 1st.');">
+            <input type="email" placeholder="Enter your email address..." required>
+            <button type="submit" class="btn-launch">Get Early Access</button>
+        </form>
     </main>
 
+    <!-- Global layout logic -->
     <script src="global.js"></script>
     
     <script>
-        const targetDate = new Date("April 1, 2026 00:00:00").getTime();
+        document.addEventListener("DOMContentLoaded", () => {
+            /* ========================================================
+               1. COUNTDOWN TIMER ENGINE (TARGET: JUNE 1, 2026)
+               ======================================================== */
+            const targetDate = new Date("June 1, 2026 00:00:00").getTime();
 
-        const timer = setInterval(function() {
-            const now = new Date().getTime();
-            const distance = targetDate - now;
+            const timer = setInterval(function() {
+                const now = new Date().getTime();
+                const distance = targetDate - now;
 
-            const d = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const s = Math.floor((distance % (1000 * 60)) / 1000);
+                if (distance < 0) {
+                    clearInterval(timer);
+                    document.querySelector(".countdown-grid").innerHTML = "<h3 style='font-size: 2rem; color: var(--uni-blue); font-weight: 900;'>WE ARE LIVE!</h3>";
+                    return;
+                }
 
-            document.getElementById("days").innerText = d.toString().padStart(2, '0');
-            document.getElementById("hours").innerText = h.toString().padStart(2, '0');
-            document.getElementById("minutes").innerText = m.toString().padStart(2, '0');
-            document.getElementById("seconds").innerText = s.toString().padStart(2, '0');
+                const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((distance % (1000 * 60)) / 1000);
 
-            if (distance < 0) {
-                clearInterval(timer);
-                document.querySelector(".countdown-grid").innerHTML = "<h3>WE ARE LIVE!</h3>";
+                document.getElementById("days").innerText = d.toString().padStart(2, '0');
+                document.getElementById("hours").innerText = h.toString().padStart(2, '0');
+                document.getElementById("minutes").innerText = m.toString().padStart(2, '0');
+                document.getElementById("seconds").innerText = s.toString().padStart(2, '0');
+            }, 1000);
+
+            /* ========================================================
+               2. 3D HOVER PHYSICS FOR SHOWCASE
+               ======================================================== */
+            try {
+                const targetCards = document.querySelectorAll('.target-3d-card');
+
+                const handleMouseMove = (e, element, intensity = 20) => {
+                    const wrapper = element.querySelector('.showcase-wrapper');
+                    if(!wrapper) return;
+
+                    const rect = element.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    const rotateX = ((y - centerY) / centerY) * -intensity;
+                    const rotateY = ((x - centerX) / centerX) * intensity;
+                    
+                    wrapper.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                };
+
+                const resetTransform = (element) => {
+                    const wrapper = element.querySelector('.showcase-wrapper');
+                    if(wrapper) wrapper.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg)';
+                };
+
+                targetCards.forEach(card => {
+                    card.addEventListener('mousemove', (e) => handleMouseMove(e, card, 15));
+                    card.addEventListener('mouseleave', () => resetTransform(card));
+                });
+            } catch (error) {
+                console.error("Physics engine error:", error);
             }
-        }, 1000);
+        });
     </script>
 </body>
 </html>

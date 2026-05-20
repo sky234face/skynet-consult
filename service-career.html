@@ -5,88 +5,170 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Career Counselling | SkyNet Consult</title>
     <link rel="icon" type="image/png" href="images/Skynet.png">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
+        /* =========================================
+           BASE STYLES & VARIABLES
+           ========================================= */
         :root {
-            --primary-navy: #0f172a;
-            --accent-blue: #3b82f6;
-            --soft-slate: #f8fafc;
+            --navy: #0a192f;
+            --skynet-blue: #3b82f6;
+            --skynet-light: #eff6ff;
+            --skynet-gradient: linear-gradient(135deg, #3b82f6, #06b6d4, #3b82f6);
+            --white: #ffffff;
+            --gray-100: #f8fafc;
+            --glass-border: rgba(0, 0, 0, 0.05);
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        body { background: #ffffff; color: var(--primary-navy); margin: 0; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--gray-100); color: var(--navy); overflow-x: hidden; }
 
-        /* --- HERO ENHANCEMENTS --- */
+        /* --- ATMOSPHERIC BACKGROUND GLOWS --- */
+        .bg-glow {
+            position: absolute; width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%; z-index: -1; pointer-events: none;
+            animation: floatGlow 10s infinite alternate ease-in-out;
+        }
+        .bg-glow.top-left { top: -100px; left: -100px; }
+        .bg-glow.bottom-right { bottom: 10%; right: -200px; animation-delay: -5s; }
+
+        @keyframes floatGlow {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(50px, 50px) scale(1.1); }
+        }
+
+        /* =========================================
+           HERO SECTION
+           ========================================= */
         .hero-split {
-            padding: 180px 8% 100px;
-            background: linear-gradient(160deg, #f8fafc 0%, #ffffff 100%);
-            min-height: 80vh;
+            padding: 10rem 8% 6rem;
+            min-height: 90vh;
             display: flex;
             align-items: center;
+            position: relative;
         }
 
         .hero-container {
             display: grid;
             grid-template-columns: 1.2fr 1fr;
-            gap: 60px;
+            gap: 80px;
             align-items: center;
-            max-width: 1300px;
+            max-width: 1400px;
             margin: 0 auto;
+            width: 100%;
+        }
+
+        .hero-content-left {
+            animation: slideUpFade 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         .tagline {
-            color: var(--accent-blue);
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-size: 14px;
-            margin-bottom: 20px;
-            display: block;
+            display: inline-block;
+            padding: 0.6rem 1.2rem;
+            background: var(--skynet-light);
+            color: var(--skynet-blue);
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            letter-spacing: 0.5px;
         }
 
         .hero-content-left h1 {
-            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
             line-height: 1.1;
             font-weight: 800;
-            margin-bottom: 30px;
+            margin-bottom: 1.5rem;
+            letter-spacing: -1.5px;
+            color: var(--navy);
         }
 
-        /* --- IMAGE PLACEHOLDER DESIGN --- */
+        .highlight {
+            background: var(--skynet-gradient);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: gradientText 4s linear infinite;
+        }
+
+        @keyframes gradientText {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .hero-description {
+            font-size: 1.15rem;
+            color: #64748b;
+            line-height: 1.7;
+            margin-bottom: 2.5rem;
+            max-width: 90%;
+        }
+
+        /* Premium Hero Button */
+        .btn-premium {
+            display: inline-block;
+            background: var(--navy);
+            color: white;
+            padding: 1.2rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 1.05rem;
+            transition: var(--transition);
+            box-shadow: 0 10px 25px rgba(10, 25, 47, 0.15);
+        }
+
+        .btn-premium:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(10, 25, 47, 0.25);
+            background: var(--skynet-blue);
+        }
+
+        /* --- 3D PREMIUM IMAGE SHOWCASE --- */
         .hero-image-right {
             position: relative;
             display: flex;
             justify-content: center;
+            perspective: 1200px;
+            animation: slideUpFade 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+            opacity: 0;
         }
 
         .image-wrapper {
             position: relative;
             width: 100%;
             max-width: 500px;
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
         }
 
         .image-bg-shape {
             position: absolute;
-            top: 10%;
-            left: 10%;
+            top: 5%;
+            left: 5%;
             width: 90%;
             height: 90%;
-            background: var(--accent-blue);
+            background: linear-gradient(135deg, rgba(59,130,246,0.3), rgba(6,182,212,0.3));
             border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
-            opacity: 0.1;
             z-index: 1;
             animation: morph 8s ease-in-out infinite;
+            transform: translateZ(-30px);
+            filter: blur(15px);
         }
 
         .hero-image {
             position: relative;
             z-index: 2;
             width: 100%;
-            filter: drop-shadow(0 30px 50px rgba(15, 23, 42, 0.1));
-            transition: transform 0.4s ease;
-        }
-
-        .hero-image:hover {
-            transform: translateY(-10px) rotate(2deg);
+            filter: drop-shadow(0 30px 50px rgba(10, 25, 47, 0.15));
+            border-radius: 20px;
+            transform: translateZ(40px);
+            animation: float 6s ease-in-out infinite;
         }
 
         @keyframes morph {
@@ -95,125 +177,211 @@
             100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
         }
 
-        /* --- FEATURES GRID --- */
-        .career-section { padding: 100px 8%; text-align: center; }
+        @keyframes float {
+            0% { transform: translateZ(40px) translateY(0px); }
+            50% { transform: translateZ(40px) translateY(-15px); }
+            100% { transform: translateZ(40px) translateY(0px); }
+        }
+
+        /* =========================================
+           FEATURES GRID
+           ========================================= */
+        .career-section { 
+            padding: 4rem 8% 8rem; 
+            text-align: center; 
+            max-width: 1400px;
+            margin: 0 auto;
+        }
         
+        .section-title {
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            font-weight: 800;
+            color: var(--navy);
+            letter-spacing: -1px;
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            color: #64748b;
+            font-size: 1.15rem;
+            margin-bottom: 4rem;
+        }
+
         .career-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
-            margin: 60px 0;
+            gap: 2.5rem;
+            perspective: 1200px;
         }
 
         .career-feature {
-            background: #ffffff;
-            padding: 50px 40px;
-            border-radius: 30px;
-            border: 1px solid #f1f5f9;
-            transition: 0.3s;
+            background: var(--white);
+            padding: 3.5rem 2.5rem;
+            border-radius: 32px;
+            border: 1px solid var(--glass-border);
             text-align: left;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.03);
+            transform-style: preserve-3d;
+            transition: var(--transition);
+        }
+
+        .career-feature::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(59, 130, 246, 0.08), transparent 40%);
+            z-index: 0; pointer-events: none; opacity: 0; transition: opacity 0.4s;
         }
 
         .career-feature:hover {
-            border-color: var(--accent-blue);
-            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.05);
-            transform: translateY(-5px);
+            border-color: rgba(59, 130, 246, 0.2);
+            box-shadow: 0 30px 60px rgba(10, 25, 47, 0.08);
+        }
+
+        .career-feature:hover::before { opacity: 1; }
+        .career-feature > * { position: relative; z-index: 1; pointer-events: none; }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            transform: translateZ(30px);
+            display: inline-block;
         }
 
         .career-feature h4 {
-            color: var(--primary-navy);
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            color: var(--navy);
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            transform: translateZ(25px);
         }
 
-        .career-feature h4::before {
-            content: '';
-            width: 12px;
-            height: 12px;
-            background: var(--accent-blue);
-            border-radius: 50%;
+        .career-feature p {
+            color: #64748b;
+            line-height: 1.7;
+            font-size: 1.05rem;
+            transform: translateZ(15px);
         }
 
-        /* --- MOBILE NAV --- */
-        .menu-toggle { display: none; flex-direction: column; cursor: pointer; gap: 5px; z-index: 1001; }
-        .bar { width: 25px; height: 3px; background-color: var(--primary-navy); transition: 0.3s; }
-
+        /* --- RESPONSIVE LAYOUT --- */
         @media (max-width: 992px) {
+            .hero-split { padding: 8rem 5% 4rem; }
             .hero-container { grid-template-columns: 1fr; text-align: center; }
-            .hero-image-right { order: -1; margin-bottom: 50px; }
-            .menu-toggle { display: flex; }
-            .nav-links {
-                position: fixed; right: -100%; top: 0; height: 100vh; width: 75%;
-                background: white; flex-direction: column; padding-top: 100px;
-                transition: 0.4s; box-shadow: -10px 0 30px rgba(0,0,0,0.1); z-index: 999;
-            }
-            .nav-links.active { right: 0; }
+            .hero-description { margin: 0 auto 2.5rem; }
+            .hero-image-right { margin-bottom: 4rem; order: -1; }
+        }
+
+        @keyframes slideUpFade { 
+            0% { opacity: 0; transform: translateY(30px); } 
+            100% { opacity: 1; transform: translateY(0); } 
         }
     </style>
 </head>
 <body>
+
+    <div class="bg-glow top-left"></div>
+    <div class="bg-glow bottom-right"></div>
+
+    <!-- HERO SECTION -->
     <header class="hero-split">
         <div class="hero-container">
             <div class="hero-content-left">
-                <span class="tagline">Strategic Career Planning</span>
-                <h1>Unlock Your <br><span style="color: var(--accent-blue);">Professional Path</span></h1>
+                <span class="tagline">✦ Strategic Career Planning</span>
+                <h1>Unlock Your <br><span class="highlight">Professional Path.</span></h1>
                 <p class="hero-description">Choosing a career is one of life's biggest decisions. We combine psychological aptitude assessments with real-time market data to ensure you choose a path that is both fulfilling and financially rewarding.</p>
                 
-                <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-                    <a href="https://wa.me/233209893750" class="btn btn-navy" style="background: var(--primary-navy); color: white; padding: 20px 40px; border-radius: 15px; text-decoration: none; font-weight: 700; display: inline-block;">Book a Private Session</a>
-                </div>
+                <!-- WhatsApp Link with Pre-filled premium message -->
+                <a href="https://wa.me/233209893750?text=Hello%20SkyNet%20Consult!%20%F0%9F%9A%80%0A%0AI%20would%20like%20to%20book%20a%20private%20Career%20Counselling%20session." class="btn-premium" target="_blank" rel="noopener">
+                    Book a Private Session →
+                </a>
             </div>
 
-            <div class="hero-image-right">
-                <div class="image-wrapper">
+            <div class="hero-image-right target-3d-card">
+                <div class="image-wrapper showcase-wrapper">
                     <div class="image-bg-shape"></div>
-                    <img src="images/Career Planning.png" class="hero-image" alt="Career Planning">
+                    <!-- Ensure Career Planning.png exists in your images folder -->
+                    <img src="images/Career Planning.png" class="hero-image" alt="Career Planning & Analytics">
                 </div>
             </div>
         </div>
     </header>
 
+    <!-- PREMIUM FEATURES GRID -->
     <section class="career-section">
-        <h2 style="font-size: 36px; font-weight: 800;">How We <span style="color: var(--accent-blue);">Guide You</span></h2>
-        <p style="color: #64748b; font-size: 18px; margin-top: 10px;">A three-step process to secure your professional future.</p>
+        <h2 class="section-title">How We <span class="highlight">Guide You</span></h2>
+        <p class="section-subtitle">A three-step framework engineered to secure your professional future.</p>
         
         <div class="career-grid">
-            <div class="career-feature">
+            <div class="career-feature target-3d-card">
+                <div class="feature-icon">🧠</div>
                 <h4>Aptitude Testing</h4>
-                <p style="color: #64748b; line-height: 1.7;">We use standardized assessments to identify your natural strengths and personality traits, narrowing down industries where you are most likely to excel.</p>
+                <p>We utilize standardized assessments to identify your natural strengths and personality traits, narrowing down industries where you have the highest probability to excel.</p>
             </div>
-            <div class="career-feature">
+            
+            <div class="career-feature target-3d-card">
+                <div class="feature-icon">📊</div>
                 <h4>Market Analysis</h4>
-                <p style="color: #64748b; line-height: 1.7;">Don't just choose a passion; choose a future. We analyze which careers are in high demand in Ghana and abroad to ensure long-term stability.</p>
+                <p>Don't just choose a passion; choose a future. We rigorously analyze which careers are in high demand across Ghana and globally to ensure long-term stability and growth.</p>
             </div>
-            <div class="career-feature">
+            
+            <div class="career-feature target-3d-card">
+                <div class="feature-icon">🎯</div>
                 <h4>Course Alignment</h4>
-                <p style="color: #64748b; line-height: 1.7;">We bridge the gap between high school and university by selecting the exact programs and institutions that lead directly to your chosen profession.</p>
+                <p>We bridge the critical gap between high school and university by selecting the exact degree programs and institutions that lead directly to your chosen profession.</p>
             </div>
         </div>
     </section>
-    <script src="global.js"></script>
-    <script>
-        // Interactive Mobile Menu logic
-        const menu = document.querySelector('#mobile-menu');
-        const menuLinks = document.querySelector('.nav-links');
-        const bars = document.querySelectorAll('.bar');
 
-        menu.addEventListener('click', () => {
-            menuLinks.classList.toggle('active');
-            if(menuLinks.classList.contains('active')) {
-                bars[0].style.transform = "rotate(45deg) translate(5px, 6px)";
-                bars[1].style.opacity = "0";
-                bars[2].style.transform = "rotate(-45deg) translate(5px, -6px)";
-            } else {
-                bars.forEach(bar => bar.style.transform = "none");
-                bars[1].style.opacity = "1";
+    <!-- Global Layout Injector -->
+    <script src="global.js"></script>
+
+    <!-- 3D Physics Engine -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            try {
+                const targets = document.querySelectorAll('.target-3d-card');
+
+                const handleMouseMove = (e, element, intensity = 8) => {
+                    const rect = element.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    const rotateX = ((y - centerY) / centerY) * -intensity;
+                    const rotateY = ((x - centerX) / centerX) * intensity;
+                    
+                    // Specific handling if it's the hero image vs a card
+                    const wrapper = element.classList.contains('hero-image-right') 
+                        ? element.querySelector('.showcase-wrapper') 
+                        : element;
+
+                    if (wrapper) {
+                        wrapper.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                        wrapper.style.setProperty('--mouse-x', `${x}px`);
+                        wrapper.style.setProperty('--mouse-y', `${y}px`);
+                    }
+                };
+
+                const resetTransform = (element) => {
+                    const wrapper = element.classList.contains('hero-image-right') 
+                        ? element.querySelector('.showcase-wrapper') 
+                        : element;
+
+                    if (wrapper) {
+                        wrapper.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg)';
+                    }
+                };
+
+                targets.forEach(target => {
+                    const isImage = target.classList.contains('hero-image-right');
+                    const intensity = isImage ? 15 : 8;
+
+                    target.addEventListener('mousemove', (e) => handleMouseMove(e, target, intensity));
+                    target.addEventListener('mouseleave', () => resetTransform(target));
+                });
+            } catch (error) {
+                console.error("Physics engine error:", error);
             }
         });
     </script>

@@ -5,10 +5,155 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SkyNet Consult | Excellence in Tertiary Orientation</title>
     <link rel="icon" type="image/png" href="images/Skynet.png">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* =========================================
+           BASE STYLES & VARIABLES
+           ========================================= */
+        :root {
+            --navy: #0a192f;
+            --skynet-blue: #3b82f6;
+            --skynet-light: #eff6ff;
+            --skynet-gradient: linear-gradient(135deg, #3b82f6, #06b6d4, #3b82f6);
+            --white: #ffffff;
+            --gray-100: #f8fafc;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--gray-100); color: var(--navy); overflow-x: hidden; }
+        
+        .bg-glow {
+            position: absolute; width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%; z-index: -1; pointer-events: none;
+            animation: floatGlow 10s infinite alternate ease-in-out;
+        }
+        .bg-glow.top-left { top: -100px; left: -100px; }
+        .bg-glow.bottom-right { bottom: 10%; right: -200px; animation-delay: -5s; }
+
+        @keyframes floatGlow {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(50px, 50px) scale(1.1); }
+        }
+
+        /* =========================================
+           HERO SECTION
+           ========================================= */
+        .hero { position: relative; min-height: 90vh; display: flex; align-items: center; justify-content: space-between; padding: 2rem 8%; gap: 4rem; margin-top: 2rem; }
+        .hero-content { flex: 1; max-width: 600px; animation: slideUpFade 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        
+        .tagline { display: inline-block; padding: 0.5rem 1rem; background: var(--skynet-light); color: var(--skynet-blue); border-radius: 50px; font-weight: 600; font-size: 0.9rem; margin-bottom: 1.5rem; border: 1px solid rgba(59, 130, 246, 0.2); }
+        h1 { font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; letter-spacing: -1.5px; }
+        
+        .highlight { background: var(--skynet-gradient); background-size: 200% auto; color: transparent; -webkit-background-clip: text; background-clip: text; animation: gradientText 4s linear infinite; }
+        @keyframes gradientText { 0% { background-position: 0% center; } 100% { background-position: 200% center; } }
+
+        .hero-description { font-size: 1.15rem; line-height: 1.7; color: #475569; margin-bottom: 2.5rem; }
+        .hero-actions { display: flex; align-items: center; gap: 1.5rem; }
+
+        .btn-primary { background: var(--navy); color: white; padding: 1rem 2rem; border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 1.05rem; transition: var(--transition); box-shadow: 0 10px 25px rgba(10, 25, 47, 0.2); }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(10, 25, 47, 0.3); background: var(--skynet-blue); }
+        .link-secondary { color: var(--navy); font-weight: 700; text-decoration: none; display: flex; align-items: center; gap: 8px; transition: var(--transition); }
+        .link-secondary:hover { color: var(--skynet-blue); gap: 12px; }
+
+        .hero-image { flex: 1; display: flex; justify-content: center; align-items: center; perspective: 1000px; }
+        .morph-container { position: relative; width: 100%; max-width: 480px; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; transform-style: preserve-3d; transition: transform 0.1s ease-out; }
+        
+        .blob-bg { position: absolute; width: 90%; height: 90%; background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(6,182,212,0.2)); border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; animation: morphing 8s infinite alternate ease-in-out; transform: translateZ(-50px); filter: blur(10px); }
+        .morph-container img { width: 60%; transform: translateZ(50px); filter: drop-shadow(0 20px 30px rgba(0,0,0,0.15)); transition: var(--transition); pointer-events: none; }
+
+        .floating-glass-card { position: absolute; bottom: 15%; left: -10%; background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--glass-border); padding: 1rem 1.5rem; border-radius: 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.08); transform: translateZ(80px); animation: floatBounce 4s infinite alternate ease-in-out; pointer-events: none; }
+        .floating-glass-card .icon { font-size: 1.5rem; }
+        .floating-glass-card div { display: flex; flex-direction: column; }
+        .floating-glass-card strong { font-size: 0.9rem; color: var(--navy); }
+        .floating-glass-card span { font-size: 0.75rem; color: var(--skynet-blue); font-weight: 600; }
+
+        @keyframes morphing { 0% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; } 100% { border-radius: 30% 60% 70% 30% / 30% 60% 30% 60%; } }
+        @keyframes floatBounce { 0% { transform: translateZ(80px) translateY(0px); } 100% { transform: translateZ(80px) translateY(-15px); } }
+        @keyframes slideUpFade { 0% { opacity: 0; transform: translateY(30px); } 100% { opacity: 1; transform: translateY(0); } }
+
+        /* =========================================
+           BENTO GRID SECTION - ALWAYS VISIBLE
+           ========================================= */
+        .bento-section { padding: 5rem 8% 4rem; }
+        .section-header { text-align: center; margin-bottom: 4rem; }
+        .section-header h2 { font-size: 2.5rem; font-weight: 800; letter-spacing: -1px; }
+        
+        .bento-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; perspective: 1200px; }
+        
+        /* Removed all opacity limits - these will always render */
+        .bento-item { background: var(--white); border-radius: 24px; padding: 2.5rem; position: relative; overflow: hidden; border: 1px solid rgba(0,0,0,0.03); box-shadow: 0 10px 30px rgba(0,0,0,0.02); transform-style: preserve-3d; opacity: 1; display: block; }
+        
+        .bento-item.featured { grid-column: span 2; background: linear-gradient(135deg, var(--navy), #112d55); color: white; }
+        .bento-item.featured h2 { font-size: 2.2rem; margin-bottom: 1rem; color: white; transform: translateZ(30px); }
+        .bento-item.featured p { color: rgba(255,255,255,0.8); font-size: 1.1rem; line-height: 1.6; margin-bottom: 2rem; transform: translateZ(20px); }
+        .bento-item.featured a { display: inline-block; padding: 0.8rem 1.5rem; background: var(--skynet-blue); color: white; border-radius: 50px; font-weight: 700; transform: translateZ(40px); transition: var(--transition); text-decoration: none; }
+        .bento-item.featured a:hover { background: white; color: var(--navy); }
+
+        .bento-item:not(.featured) h3 { font-size: 1.4rem; margin-bottom: 0.8rem; color: var(--navy); transform: translateZ(20px); }
+        .bento-item:not(.featured) p { color: #64748b; line-height: 1.5; font-size: 0.95rem; transform: translateZ(10px); }
+        .bento-emoji { font-size: 2.5rem; margin-bottom: 1.5rem; transform: translateZ(30px); display: inline-block; }
+
+        .bento-item::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(59, 130, 246, 0.06), transparent 40%); z-index: 0; pointer-events: none; opacity: 0; transition: opacity 0.4s; }
+        .bento-item.featured::before { background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255, 255, 255, 0.1), transparent 40%); }
+        .bento-item:hover::before { opacity: 1; }
+        .bento-item > * { position: relative; z-index: 1; pointer-events: none; }
+        .bento-item.featured a { pointer-events: auto; }
+
+        /* =========================================
+           STATS & PROCESS TIMELINE - ALWAYS VISIBLE
+           ========================================= */
+        .impact-section { padding: 4rem 8%; display: block; opacity: 1; }
+        .stats-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; background: var(--white); padding: 3rem; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.03); text-align: center; opacity: 1; }
+        .stat-item h4 { font-size: 3.5rem; font-weight: 800; color: var(--skynet-blue); margin-bottom: 0.5rem; letter-spacing: -2px; }
+        .stat-item p { font-weight: 600; color: #64748b; font-size: 1.1rem; }
+
+        .process-timeline { display: flex; justify-content: space-between; align-items: center; margin-top: 5rem; position: relative; padding: 0 2rem; opacity: 1; }
+        .process-timeline::before { content: ''; position: absolute; top: 50%; left: 5%; right: 5%; height: 2px; background: rgba(59, 130, 246, 0.2); z-index: 0; transform: translateY(-50%); }
+        .process-step { position: relative; z-index: 1; background: var(--gray-100); padding: 1rem; border-radius: 50%; text-align: center; width: 140px; }
+        .step-circle { width: 70px; height: 70px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: 800; color: var(--navy); margin: 0 auto 1rem; box-shadow: 0 10px 20px rgba(0,0,0,0.05); border: 2px solid var(--skynet-blue); }
+        .process-step p { font-weight: 700; font-size: 0.95rem; color: var(--navy); }
+
+        /* =========================================
+           FINAL PREMIUM CTA BANNER - ALWAYS VISIBLE
+           ========================================= */
+        .cta-section { padding: 2rem 8% 6rem; display: block; opacity: 1; }
+        .cta-box { position: relative; background: var(--navy); border-radius: 32px; padding: 6rem 3rem; text-align: center; overflow: hidden; box-shadow: 0 30px 60px rgba(10, 25, 47, 0.2); }
+        .cta-bg-mesh { position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.2), transparent 60%); animation: rotateMesh 15s linear infinite; z-index: 0; pointer-events: none; }
+        @keyframes rotateMesh { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .cta-content { position: relative; z-index: 1; }
+        .cta-content h2 { color: white; font-size: clamp(2rem, 4vw, 3.5rem); margin-bottom: 1.5rem; letter-spacing: -1px; }
+        .cta-content p { color: rgba(255,255,255,0.8); font-size: 1.2rem; margin-bottom: 2.5rem; max-width: 600px; margin-inline: auto; }
+        .cta-btn { display: inline-block; background: white; color: var(--navy); padding: 1.2rem 3rem; border-radius: 50px; font-weight: 800; font-size: 1.1rem; text-decoration: none; transition: var(--transition); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        .cta-btn:hover { background: var(--skynet-blue); color: white; transform: scale(1.05); }
+
+        /* Responsive Layout Overrides */
+        @media (max-width: 1024px) {
+            .hero { flex-direction: column; text-align: center; margin-top: 4rem; }
+            .hero-actions { justify-content: center; }
+            .floating-glass-card { left: auto; right: -5%; bottom: 0; }
+        }
+        @media (max-width: 768px) {
+            .bento-grid { grid-template-columns: 1fr; }
+            .bento-item.featured { grid-column: span 1; }
+            .stats-container { grid-template-columns: 1fr; gap: 3rem; }
+            .process-timeline { flex-direction: column; gap: 3rem; }
+            .process-timeline::before { display: none; }
+            .cta-box { padding: 4rem 1.5rem; }
+        }
+    </style>
 </head>
 <body>
+
+<div class="bg-glow top-left"></div>
+<div class="bg-glow bottom-right"></div>
+
+<!-- HERO SECTION -->
 <header class="hero">
     <div class="hero-content">
         <span class="tagline">✦ Leading Academic Consultancy</span>
@@ -18,69 +163,194 @@
         </p>
         <div class="hero-actions">
             <a href="contact.html" class="btn-primary">Begin Consultation</a>
-            <a href="#how" style="margin-left: 20px; color: var(--navy); font-weight: 700; text-decoration: none;">Learn our process →</a>
+            <a href="#how" class="link-secondary">Learn our process <span>→</span></a>
         </div>
     </div>
     
     <div class="hero-image">
-        <div class="morph-container">
-             <img src="images/Skynet.png" alt="SkyNet Symbol">
+        <div class="morph-container" id="hero-3d">
+            <div class="blob-bg"></div>
+            <img src="images/Skynet.png" alt="SkyNet Symbol">
+            
+            <div class="floating-glass-card">
+                <div class="icon">📊</div>
+                <div>
+                    <strong>Data-Driven</strong>
+                    <span>UniMatcher® Active</span>
+                </div>
+            </div>
         </div>
     </div>
 </header>
 
-<section class="bento-grid" id="how">
-    <div class="bento-item featured">
-        <h2>The UniMatcher® Advantage</h2>
-        <p>Our intelligent system matches your specific grades with accredited programs across Ghana, ensuring you apply where you are most likely to succeed.</p>
-        <a href="unimatcher.html" style="color: var(--skynet-blue); text-decoration: none; font-weight: 700;">Launch UniMatcher →</a>
+<!-- BENTO GRID SECTION (Now perfectly visible) -->
+<section class="bento-section" id="how">
+    <div class="section-header">
+        <h2>Our Core Solutions</h2>
     </div>
     
-    <div class="bento-item">
-        <div style="font-size: 1.5rem; margin-bottom: 1rem;">📱</div>
-        <h3>Voucher Portal</h3>
-        <p>Fast and secure Mobile Money delivery of tertiary admission vouchers.</p>
-    </div>
-    
-    <div class="bento-item">
-        <div style="font-size: 1.5rem; margin-bottom: 1rem;">🌍</div>
-        <h3>Global Admissions</h3>
-        <p>Expert guidance for students seeking tertiary education abroad.</p>
-    </div>
+    <div class="bento-grid">
+        <div class="bento-item featured 3d-card">
+            <h2>The UniMatcher® Advantage</h2>
+            <p>Our intelligent system matches your specific grades with accredited programs across Ghana, ensuring you apply where you are most likely to succeed.</p>
+            <a href="unimatcher.html">Launch UniMatcher →</a>
+        </div>
+        
+        <div class="bento-item 3d-card">
+            <div class="bento-emoji">📱</div>
+            <h3>Voucher Portal</h3>
+            <p>Fast and secure Mobile Money delivery of tertiary admission vouchers directly to your device.</p>
+        </div>
+        
+        <div class="bento-item 3d-card">
+            <div class="bento-emoji">🌍</div>
+            <h3>Global Admissions</h3>
+            <p>Expert guidance and documentation support for students seeking tertiary education abroad.</p>
+        </div>
 
-    <div class="bento-item">
-        <div style="font-size: 1.5rem; margin-bottom: 1rem;">📋</div>
-        <h3>Orientation</h3>
-        <p>Strategic program selection based on current job market trends.</p>
+        <div class="bento-item 3d-card">
+            <div class="bento-emoji">📋</div>
+            <h3>Orientation</h3>
+            <p>Strategic program selection based on current job market trends and your unique strengths.</p>
+        </div>
+        
+        <div class="bento-item 3d-card" style="grid-column: span 2;">
+            <div class="bento-emoji">🎯</div>
+            <h3>Interview Preparation</h3>
+            <p>Rigorous prep sessions tailored for competitive programs like Medicine, Law, and Engineering.</p>
+        </div>
     </div>
 </section>
 
-<style>
-    /* Unique Hero Animation */
-    .morph-container {
-        position: relative;
-        width: 100%;
-        max-width: 450px;
-        height: 450px;
-        background: var(--light-blue);
-        border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-        animation: morphing 8s infinite alternate ease-in-out;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-left: auto;
-    }
+<!-- STATS & PROCESS TIMELINE -->
+<section class="impact-section">
+    <div class="stats-container">
+        <div class="stat-item">
+            <h4 class="counter" data-target="98">0</h4>
+            <p>Placement Success Rate %</p>
+        </div>
+        <div class="stat-item">
+            <h4 class="counter" data-target="50">0</h4>
+            <p>Partner Programs</p>
+        </div>
+        <div class="stat-item">
+            <h4 class="counter" data-target="1500">0</h4>
+            <p>Students Guided</p>
+        </div>
+    </div>
 
-    .morph-container img {
-        width: 70%;
-        filter: drop-shadow(0 20px 30px rgba(0,0,0,0.1));
-    }
+    <div class="process-timeline">
+        <div class="process-step">
+            <div class="step-circle">1</div>
+            <p>Analyze Grades</p>
+        </div>
+        <div class="process-step">
+            <div class="step-circle">2</div>
+            <p>UniMatcher Scan</p>
+        </div>
+        <div class="process-step">
+            <div class="step-circle">3</div>
+            <p>Select Program</p>
+        </div>
+        <div class="process-step">
+            <div class="step-circle">4</div>
+            <p>Secure Admission</p>
+        </div>
+    </div>
+</section>
 
-    @keyframes morphing {
-        0% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
-        100% { border-radius: 30% 60% 70% 30% / 30% 60% 30% 60%; }
-    }
-</style>
+<!-- FINAL HIGH-END CTA BANNER -->
+<section class="cta-section">
+    <div class="cta-box">
+        <div class="cta-bg-mesh"></div>
+        <div class="cta-content">
+            <h2>Ready to secure your future?</h2>
+            <p>Stop guessing with your applications. Let our data-driven insights place you in the perfect tertiary program today.</p>
+            <a href="contact.html" class="cta-btn">Start Your Application</a>
+        </div>
+    </div>
+</section>
+
+<!-- If this file is missing locally, it will NOT break the rest of the page -->
 <script src="global.js"></script>
+
+<!-- Bulletproof JS for 3D Cards and Counters ONLY -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        try {
+            /* ========================================================
+               1. 3D TILT PHYSICS FOR CARDS
+               ======================================================== */
+            const heroContainer = document.getElementById('hero-3d');
+            const bentoCards = document.querySelectorAll('.3d-card');
+
+            const handleMouseMove = (e, element, intensity = 15) => {
+                const rect = element.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = ((y - centerY) / centerY) * -intensity;
+                const rotateY = ((x - centerX) / centerX) * intensity;
+                
+                element.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                
+                element.style.setProperty('--mouse-x', `${x}px`);
+                element.style.setProperty('--mouse-y', `${y}px`);
+            };
+
+            const resetTransform = (element) => {
+                element.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+            };
+
+            if (heroContainer) {
+                heroContainer.addEventListener('mousemove', (e) => handleMouseMove(e, heroContainer, 20));
+                heroContainer.addEventListener('mouseleave', () => resetTransform(heroContainer));
+            }
+
+            bentoCards.forEach(card => {
+                card.addEventListener('mousemove', (e) => handleMouseMove(e, card, 8));
+                card.addEventListener('mouseleave', () => resetTransform(card));
+            });
+
+            /* ========================================================
+               2. NUMBER COUNTER ANIMATION (STATS)
+               ======================================================== */
+            const counters = document.querySelectorAll('.counter');
+            const speed = 200; 
+
+            const startCounting = (counter) => {
+                const updateCount = () => {
+                    const target = +counter.getAttribute('data-target');
+                    const count = +counter.innerText;
+                    const inc = target / speed;
+
+                    if (count < target) {
+                        counter.innerText = Math.ceil(count + inc);
+                        setTimeout(updateCount, 15);
+                    } else {
+                        counter.innerText = target + (target > 100 ? "+" : "%");
+                    }
+                };
+                updateCount();
+            };
+
+            const counterObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        startCounting(entry.target);
+                        counterObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            counters.forEach(counter => counterObserver.observe(counter));
+
+        } catch (error) {
+            console.error("Non-critical animation error:", error);
+        }
+    });
+</script>
 </body>
 </html>
